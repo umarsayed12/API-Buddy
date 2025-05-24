@@ -1,0 +1,42 @@
+import React, { useState } from "react";
+import axios from "axios";
+
+function FileUpload({ setEndpoints }) {
+  const [loading, setLoading] = useState(false);
+
+  const handleUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/upload",
+        formData
+      );
+      setEndpoints(res.data.endpoints);
+    } catch (err) {
+      alert("Upload failed. Check console.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center gap-3 mb-6">
+      <input
+        type="file"
+        accept=".json"
+        onChange={handleUpload}
+        className="text-sm"
+      />
+      {loading && <span className="text-blue-500">Processing...</span>}
+    </div>
+  );
+}
+
+export default FileUpload;
