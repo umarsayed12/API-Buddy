@@ -7,6 +7,7 @@ import axios from "axios";
 function App() {
   const [endpoints, setEndpoints] = useState([]);
   const [results, setResults] = useState([]);
+  const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const runTests = async () => {
@@ -16,6 +17,7 @@ function App() {
         endpoints,
       });
       setResults(res.data.results);
+      setSummary(res.data.summary); // <-- 🆕 Grab summary from response
     } catch (err) {
       console.error("Test failed", err);
       alert("Test run failed. Check console.");
@@ -44,7 +46,7 @@ function App() {
       {results.length > 0 && (
         <div className="mt-8">
           <h2 className="text-xl font-semibold mb-2">Test Results</h2>
-          <TestResultsTable results={results} />
+          <TestResultsTable results={results} summary={summary} />
         </div>
       )}
     </div>

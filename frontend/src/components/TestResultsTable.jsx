@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function TestResultsTable({ results }) {
+function TestResultsTable({ results, summary }) {
   const [loadingIndex, setLoadingIndex] = useState(null);
   const [aiResponse, setAiResponse] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -18,15 +18,46 @@ function TestResultsTable({ results }) {
       setShowModal(true);
     } catch (err) {
       console.log("AI Failed : ", err);
-
       alert("AI explanation failed");
     } finally {
       setLoadingIndex(null);
     }
   };
+  function parseBold(text) {
+    const parts = text.split(/(\*\*[^*]+\*\*)/g);
+    return parts.map((part, index) => {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        return <strong key={index}>{part.slice(2, -2)}</strong>;
+      }
+      return part;
+    });
+  }
 
   return (
-    <div className="overflow-x-auto bg-white shadow rounded p-4">
+    <div className="overflow-x-auto bg-white shadow rounded p-4 space-y-6">
+      {/* 🟢 Summary Panel */}
+      {summary && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm text-white">
+          <div className="bg-gray-700 rounded-lg p-3">
+            <div className="font-medium">Total</div>
+            <div className="text-xl font-bold">{summary.total}</div>
+          </div>
+          <div className="bg-green-600 rounded-lg p-3">
+            <div className="font-medium">Passed</div>
+            <div className="text-xl font-bold">{summary.passed}</div>
+          </div>
+          <div className="bg-red-600 rounded-lg p-3">
+            <div className="font-medium">Failed</div>
+            <div className="text-xl font-bold">{summary.failed}</div>
+          </div>
+          <div className="bg-blue-600 rounded-lg p-3">
+            <div className="font-medium">Avg Time</div>
+            <div className="text-xl font-bold">{summary.avgTime}</div>
+          </div>
+        </div>
+      )}
+
+      {/* 🔍 Results Table */}
       <table className="min-w-full text-sm text-left">
         <thead className="bg-gray-200">
           <tr>
@@ -67,18 +98,18 @@ function TestResultsTable({ results }) {
         </tbody>
       </table>
 
-      {/* AI Explanation Modal */}
+      {/* 💡 AI Modal */}
       {showModal && aiResponse && (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
           <div className="bg-white rounded-xl shadow-lg p-6 max-w-2xl">
             <h3 className="text-lg font-semibold mb-4">
-              🧠 Gemini AI Explanation
+              🤖 API Buddy Explanation
             </h3>
             <pre className="whitespace-pre-wrap text-sm text-gray-800 mb-4">
-              {aiResponse}
+              {parseBold(aiResponse)}
             </pre>
             <button
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 cursor-pointer"
               onClick={() => setShowModal(false)}
             >
               Close
