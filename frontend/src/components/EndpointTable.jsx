@@ -2,10 +2,10 @@ import React from "react";
 
 function EndpointTable({ endpoints }) {
   return (
-    <div className="overflow-x-auto bg-white shadow-md rounded-lg p-4">
+    <div className="overflow-x-auto bg-gray-900 shadow-2xl shadow-black rounded-xl p-4">
       <table className="min-w-full text-sm text-left">
         <thead>
-          <tr className="bg-gray-200">
+          <tr className="bg-gray-800">
             <th className="p-2">Name</th>
             <th className="p-2">Method</th>
             <th className="p-2">URL</th>

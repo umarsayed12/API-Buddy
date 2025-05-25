@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+import { FileUpload as Upload } from "../../components/ui/file-uploads";
 function FileUpload({ setEndpoints }) {
   const [loading, setLoading] = useState(false);
 
   const handleUpload = async (e) => {
-    const file = e.target.files[0];
+    const file = e[0];
     if (!file) return;
 
     setLoading(true);
@@ -28,7 +28,7 @@ function FileUpload({ setEndpoints }) {
 
   return (
     <div className="flex flex-col items-center gap-3 mb-6">
-      <input
+      <Upload
         type="file"
         accept=".json"
         onChange={handleUpload}

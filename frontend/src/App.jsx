@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import FileUpload from "./components/FileUpload";
 import EndpointTable from "./components/EndpointTable";
 import TestResultsTable from "./components/TestResultsTable";
+import ManualInputForm from "./components/ManualInputForm";
 import axios from "axios";
 
 function App() {
+  const [activeTab, setActiveTab] = useState("collection");
   const [endpoints, setEndpoints] = useState([]);
   const [results, setResults] = useState([]);
   const [summary, setSummary] = useState(null);
@@ -17,7 +19,7 @@ function App() {
         endpoints,
       });
       setResults(res.data.results);
-      setSummary(res.data.summary); // <-- 🆕 Grab summary from response
+      setSummary(res.data.summary);
     } catch (err) {
       console.error("Test failed", err);
       alert("Test run failed. Check console.");
@@ -27,22 +29,69 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center">
-        Auto API Tester Agent
+    <div className="min-h-screen bg-gradient-to-br from-[#1E2F97] via-[#1AA7EC] to-[#1E2F97] p-6">
+      <h1 className="text-5xl text-white font-serif font-bold mb-6 text-center">
+        API Buddy
       </h1>
-      <FileUpload setEndpoints={setEndpoints} />
-      {endpoints.length > 0 && (
+
+      {/* Tabs */}
+      <div className="flex justify-center mb-6">
+        <button
+          className={`px-4 py-2 mx-2 rounded ${
+            activeTab === "collection"
+              ? "text-gray-900 bg-white"
+              : "bg-gray-900 text-white cursor-pointer"
+          }`}
+          onClick={() => {
+            setActiveTab("collection");
+            setResults([]);
+            setSummary(null);
+          }}
+        >
+          Collection Upload
+        </button>
+        <button
+          className={`px-4 py-2 mx-2 rounded ${
+            activeTab === "manual"
+              ? "text-gray-900 bg-white"
+              : "bg-gray-900 text-white cursor-pointer"
+          }`}
+          onClick={() => {
+            setActiveTab("manual");
+            setEndpoints([]);
+            setResults([]);
+            setSummary(null);
+          }}
+        >
+          URL Input
+        </button>
+      </div>
+
+      {activeTab === "collection" && (
         <>
-          <button
-            onClick={runTests}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition mb-4"
-          >
-            {loading ? "Running Tests..." : "Run Tests"}
-          </button>
-          <EndpointTable endpoints={endpoints} />
+          {/* Upload Collection File */}
+          <FileUpload setEndpoints={setEndpoints} />
+
+          {endpoints.length > 0 && (
+            <>
+              <button
+                onClick={runTests}
+                className="bg-gray-900 text-white px-4 py-2 rounded hover:bg-blue-700 transition mb-4"
+              >
+                {loading ? "Running Tests..." : "Run Tests"}
+              </button>
+              <EndpointTable endpoints={endpoints} />
+            </>
+          )}
         </>
       )}
+
+      {activeTab === "manual" && (
+        <div className="my-6">
+          <ManualInputForm setResults={setResults} setSummary={setSummary} />
+        </div>
+      )}
+
       {results.length > 0 && (
         <div className="mt-8">
           <h2 className="text-xl font-semibold mb-2">Test Results</h2>

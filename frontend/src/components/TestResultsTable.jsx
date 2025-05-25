@@ -32,9 +32,30 @@ function TestResultsTable({ results, summary }) {
       return part;
     });
   }
+  function extractErrorMessage(htmlString) {
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlString, "text/html");
+      const pre = doc.querySelector("pre");
+      if (pre) {
+        // Replace <br> with newlines and decode HTML entities like &nbsp;
+        return pre.innerHTML
+          .replace(/<br\s*\/?>/gi, "\n")
+          .replace(/&nbsp;/g, " ")
+          .replace(/&amp;/g, "&")
+          .replace(/&lt;/g, "<")
+          .replace(/&gt;/g, ">")
+          .replace(/&#039;/g, `'`)
+          .replace(/&quot;/g, `"`);
+      }
+      return htmlString;
+    } catch {
+      return htmlString;
+    }
+  }
 
   return (
-    <div className="overflow-x-auto bg-white shadow rounded p-4 space-y-6">
+    <div className="overflow-x-auto bg-gray-900 shadow-2xl shadow-black rounded-xl p-4 space-y-6">
       {/* 🟢 Summary Panel */}
       {summary && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm text-white">
@@ -59,14 +80,14 @@ function TestResultsTable({ results, summary }) {
 
       {/* 🔍 Results Table */}
       <table className="min-w-full text-sm text-left">
-        <thead className="bg-gray-200">
+        <thead className="bg-gray-800">
           <tr>
             <th className="p-2">Name</th>
             <th className="p-2">Method</th>
             <th className="p-2">URL</th>
             <th className="p-2">Status</th>
             <th className="p-2">Time</th>
-            <th className="p-2">Error</th>
+            <th className="p-2">Response</th>
             <th className="p-2">AI Explain</th>
           </tr>
         </thead>
@@ -78,8 +99,29 @@ function TestResultsTable({ results, summary }) {
               <td className="p-2 text-sm">{res.url}</td>
               <td className="p-2 font-semibold text-blue-600">{res.status}</td>
               <td className="p-2">{res.time}</td>
-              <td className="p-2 text-red-600 text-xs whitespace-pre-wrap">
-                {res.error ? JSON.stringify(res.error, null, 2) : "-"}
+              <td className="p-2 text-xs whitespace-pre-wrap">
+                {res.error ? (
+                  <div className="text-red-600">
+                    <div className="font-bold">Error : </div>
+                    <div className="max-h-[180px] overflow-y-scroll">
+                      {typeof extractErrorMessage(res.error) === "string"
+                        ? extractErrorMessage(res.error)
+                        : JSON.stringify(extractErrorMessage(res.error))}
+                    </div>
+                  </div>
+                ) : res.data ? (
+                  <div className="">
+                    <div className="text-green-600 font-bold">Success</div>
+                    <div className="font-bold">Data :</div>
+                    <div className="max-h-[180px] overflow-y-scroll">
+                      {typeof res.data === "string"
+                        ? res.data
+                        : JSON.stringify(res.data, null, 2)}
+                    </div>
+                  </div>
+                ) : (
+                  "-"
+                )}
               </td>
               <td className="p-2">
                 {res.error ? (

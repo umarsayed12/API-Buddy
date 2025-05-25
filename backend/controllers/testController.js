@@ -2,6 +2,7 @@ const axios = require("axios");
 
 const runTests = async (req, res) => {
   const endpoints = req.body.endpoints;
+
   const results = [];
 
   let total = 0;
@@ -45,7 +46,8 @@ const runTests = async (req, res) => {
       const start = Date.now();
       const response = await axios(options);
       const duration = Date.now() - start;
-
+      // result.data = [];
+      result.data = response.data ? JSON.stringify(response.data) : null;
       result.status = response.status;
       result.time = `${duration} ms`;
       result.error = response.status >= 400 ? response.data : null;
