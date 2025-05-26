@@ -1,4 +1,4 @@
-# 🧠 Auto API Tester Agent
+# 🧠 API Buddy
 
 An intelligent, Postman-like platform that automates API testing using AI capabilities. This tool simplifies manual and batch endpoint testing with features like AI error explanation, collection file upload, prompt-based assistance, response summary, and a modern UI/UX tailored for productivity.
 
