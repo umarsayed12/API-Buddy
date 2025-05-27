@@ -11,7 +11,7 @@ const runTests = async (req, res) => {
   let totalTime = 0;
 
   for (let ep of endpoints) {
-    const { method, url, body } = ep;
+    const { method, url, body, headers = {} } = ep;
     const result = {
       name: ep.name,
       method,
@@ -32,13 +32,23 @@ const runTests = async (req, res) => {
       results.push(result);
       continue;
     } else {
-      parsedBody = JSON.parse(body);
+      try {
+        parsedBody = body ? JSON.parse(body) : {};
+      } catch (err) {
+        result.status = "ERR";
+        result.time = "-";
+        result.error = "Invalid JSON body";
+        failed++;
+        results.push(result);
+        continue;
+      }
     }
 
     const options = {
       method,
       url,
       data: parsedBody,
+      headers,
       validateStatus: () => true,
     };
 
@@ -46,8 +56,7 @@ const runTests = async (req, res) => {
       const start = Date.now();
       const response = await axios(options);
       const duration = Date.now() - start;
-      // result.data = [];
-      result.data = response.data ? JSON.stringify(response.data) : null;
+      result.data = response.data || null;
       result.status = response.status;
       result.time = `${duration} ms`;
       result.error = response.status >= 400 ? response.data : null;

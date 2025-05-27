@@ -18,7 +18,7 @@ function EndpointTable({ endpoints }) {
               <td className="p-2">{ep.name}</td>
               <td className="p-2 font-bold text-blue-600">{ep.method}</td>
               <td className="p-2 text-sm">{ep.url}</td>
-              <td className="p-2 whitespace-pre-wrap text-xs text-gray-600">
+              <td className="p-2 whitespace-pre-wrap text-xs text-gray-200">
                 {ep.body || "N/A"}
               </td>
             </tr>

@@ -38,7 +38,6 @@ function TestResultsTable({ results, summary }) {
       const doc = parser.parseFromString(htmlString, "text/html");
       const pre = doc.querySelector("pre");
       if (pre) {
-        // Replace <br> with newlines and decode HTML entities like &nbsp;
         return pre.innerHTML
           .replace(/<br\s*\/?>/gi, "\n")
           .replace(/&nbsp;/g, " ")
@@ -56,7 +55,6 @@ function TestResultsTable({ results, summary }) {
 
   return (
     <div className="overflow-x-auto bg-gray-900 shadow-2xl shadow-black rounded-xl p-4 space-y-6">
-      {/* 🟢 Summary Panel */}
       {summary && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm text-white">
           <div className="bg-gray-700 rounded-lg p-3">
@@ -78,7 +76,6 @@ function TestResultsTable({ results, summary }) {
         </div>
       )}
 
-      {/* 🔍 Results Table */}
       <table className="min-w-full text-sm text-left">
         <thead className="bg-gray-800">
           <tr>
@@ -102,8 +99,8 @@ function TestResultsTable({ results, summary }) {
               <td className="p-2 text-xs whitespace-pre-wrap">
                 {res.error ? (
                   <div className="text-red-600">
-                    <div className="font-bold">Error : </div>
-                    <div className="max-h-[180px] overflow-y-scroll">
+                    <div className="font-bold mb-1">Error : </div>
+                    <div className="max-h-[180px] overflow-y-scroll text-red-600 whitespace-pre-wrap text-sm bg-gray-50 p-2 rounded border">
                       {typeof extractErrorMessage(res.error) === "string"
                         ? extractErrorMessage(res.error)
                         : JSON.stringify(extractErrorMessage(res.error))}
@@ -111,12 +108,34 @@ function TestResultsTable({ results, summary }) {
                   </div>
                 ) : res.data ? (
                   <div className="">
-                    <div className="text-green-600 font-bold">Success</div>
-                    <div className="font-bold">Data :</div>
-                    <div className="max-h-[180px] overflow-y-scroll">
-                      {typeof res.data === "string"
-                        ? res.data
-                        : JSON.stringify(res.data, null, 2)}
+                    <div className="text-green-600 font-bold mb-1">Success</div>
+                    <div className="font-bold mb-1">Data :</div>
+                    <div className="max-h-[180px] overflow-y-scroll text-black whitespace-pre-wrap text-sm bg-gray-50 p-2 rounded border">
+                      {(() => {
+                        if (typeof res.data === "string") {
+                          return res.data;
+                        } else if (Array.isArray(res.data)) {
+                          return (
+                            <>
+                              [
+                              {res.data.map((item, idx) =>
+                                typeof item === "object" ? (
+                                  <div key={idx}>
+                                    {JSON.stringify(item, null, 2)},
+                                  </div>
+                                ) : (
+                                  <div key={idx}>{item}</div>
+                                )
+                              )}
+                              ]
+                            </>
+                          );
+                        } else if (typeof res.data === "object") {
+                          return JSON.stringify(res.data, null, 2);
+                        } else {
+                          return String(res.data);
+                        }
+                      })()}
                     </div>
                   </div>
                 ) : (
@@ -140,9 +159,8 @@ function TestResultsTable({ results, summary }) {
         </tbody>
       </table>
 
-      {/* 💡 AI Modal */}
       {showModal && aiResponse && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+        <div className="fixed overflow-y-auto inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
           <div className="bg-white rounded-xl shadow-lg p-6 max-w-2xl">
             <h3 className="text-lg font-semibold mb-4">
               🤖 API Buddy Explanation

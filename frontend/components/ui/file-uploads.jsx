@@ -51,7 +51,10 @@ export const FileUpload = ({ onChange }) => {
   });
 
   return (
-    <div className="w-[40%] rounded-2xl bg-gray-900" {...getRootProps()}>
+    <div
+      className="w-[40%] rounded-2xl bg-white text-black"
+      {...getRootProps()}
+    >
       <motion.div
         onClick={handleClick}
         whileHover="animate"
@@ -68,7 +71,7 @@ export const FileUpload = ({ onChange }) => {
           <GridPattern />
         </div> */}
         <div className="flex flex-col items-center justify-center">
-          <p className="relative z-20 font-sans font-bold text-white">
+          <p className="relative z-20 font-sans font-bold text-black">
             Upload file
           </p>
           <p className="relative z-20 font-sans font-normal text-neutral-400 dark:text-neutral-400 text-base mt-2">
@@ -136,20 +139,20 @@ export const FileUpload = ({ onChange }) => {
                 }}
                 className={cn(
                   "relative group-hover/file:shadow-2xl z-40 bg-white dark:bg-neutral-900 flex items-center justify-center h-32 mt-4 w-full max-w-[8rem] mx-auto rounded-md",
-                  "shadow-[0px_10px_50px_rgba(1,1,1,1.1)]"
+                  "shadow-[0px_10px_50px_rgba(0,0,0,0.1)]"
                 )}
               >
                 {isDragActive ? (
                   <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-neutral-600 flex flex-col items-center"
+                    className="text-black flex flex-col items-center"
                   >
                     Drop it
-                    <IconUpload className="h-4 w-4 text-neutral-600 dark:text-neutral-400" />
+                    <IconUpload className="h-4 w-4 text-white dark:text-neutral-400" />
                   </motion.p>
                 ) : (
-                  <IconUpload className="h-4 w-4 text-neutral-600 dark:text-neutral-300" />
+                  <IconUpload className="h-4 w-4 text-white dark:text-neutral-300" />
                 )}
               </motion.div>
             )}
@@ -166,27 +169,3 @@ export const FileUpload = ({ onChange }) => {
     </div>
   );
 };
-
-export function GridPattern() {
-  const columns = 41;
-  const rows = 11;
-  return (
-    <div className="flex bg-gray-100 dark:bg-neutral-900 shrink-0 flex-wrap justify-center items-center gap-x-px gap-y-px  scale-105">
-      {Array.from({ length: rows }).map((_, row) =>
-        Array.from({ length: columns }).map((_, col) => {
-          const index = row * columns + col;
-          return (
-            <div
-              key={`${col}-${row}`}
-              className={`w-10 h-10 flex shrink-0 rounded-[2px] ${
-                index % 2 === 0
-                  ? "bg-gray-50 dark:bg-neutral-950"
-                  : "bg-gray-50 dark:bg-neutral-950 shadow-[0px_0px_1px_3px_rgba(255,255,255,1)_inset] dark:shadow-[0px_0px_1px_3px_rgba(0,0,0,1)_inset]"
-              }`}
-            />
-          );
-        })
-      )}
-    </div>
-  );
-}

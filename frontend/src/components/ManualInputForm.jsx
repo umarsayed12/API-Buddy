@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+import { useJwt } from "../context/JWTContext";
 function ManualInputForm({ setResults, setSummary }) {
   const [url, setUrl] = useState("");
   const [urlError, setUrlError] = useState(false);
@@ -8,6 +8,7 @@ function ManualInputForm({ setResults, setSummary }) {
   const [body, setBody] = useState("");
   const [headers, setHeaders] = useState("");
   const [loading, setLoading] = useState(false);
+  const token = useJwt();
 
   const handleSend = async () => {
     if (!url.trim()) {
@@ -22,7 +23,20 @@ function ManualInputForm({ setResults, setSummary }) {
         method,
         url,
         body: body.trim() ? body : "{}",
-        headers: headers.trim() ? JSON.parse(headers) : "{}",
+        headers: (() => {
+          try {
+            const parsedHeaders = headers.trim() ? JSON.parse(headers) : {};
+            return {
+              ...parsedHeaders,
+              ...(token.token && { Authorization: `Bearer ${token.token}` }),
+            };
+          } catch (err) {
+            console.error("Invalid headers JSON", err);
+            return token.token
+              ? { Authorization: `Bearer ${token.token}` }
+              : {};
+          }
+        })(),
       };
 
       const res = await axios.post("http://localhost:5000/api/test", {

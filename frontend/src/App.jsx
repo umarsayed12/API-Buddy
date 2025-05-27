@@ -4,20 +4,27 @@ import EndpointTable from "./components/EndpointTable";
 import TestResultsTable from "./components/TestResultsTable";
 import ManualInputForm from "./components/ManualInputForm";
 import axios from "axios";
-
+import JwtTokenInput from "./components/JWTTokenInput";
+import { useJwt } from "./context/JWTContext";
 function App() {
   const [activeTab, setActiveTab] = useState("collection");
   const [endpoints, setEndpoints] = useState([]);
   const [results, setResults] = useState([]);
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const token = useJwt();
   const runTests = async () => {
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/test", {
-        endpoints,
-      });
+      const res = await axios.post(
+        "http://localhost:5000/api/test",
+        { endpoints },
+        {
+          headers: token.token
+            ? { Authorization: `Bearer ${token.token}` }
+            : {},
+        }
+      );
       setResults(res.data.results);
       setSummary(res.data.summary);
     } catch (err) {
@@ -29,11 +36,13 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1E2F97] via-[#1AA7EC] to-[#1E2F97] p-6">
+    <div className="min-h-screen bg-gradient-to-br text-white from-[#1E2F97] via-[#1AA7EC] to-[#1E2F97] p-6">
       <h1 className="text-5xl text-white font-serif font-bold mb-6 text-center">
         API Buddy
       </h1>
-
+      <div className="w-full flex justify-center items-center">
+        <JwtTokenInput />
+      </div>
       {/* Tabs */}
       <div className="flex justify-center mb-6">
         <button
@@ -76,7 +85,7 @@ function App() {
             <>
               <button
                 onClick={runTests}
-                className="bg-gray-900 text-white px-4 py-2 rounded hover:bg-blue-700 transition mb-4"
+                className="bg-gray-900 text-white px-4 py-2 rounded hover:bg-blue-700 transition mb-4 cursor-pointer"
               >
                 {loading ? "Running Tests..." : "Run Tests"}
               </button>

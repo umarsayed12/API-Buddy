@@ -18,9 +18,15 @@ Request:
 - Error Message: ${JSON.stringify(error)}
 
 Reply in 3 short paragraphs:
-1. Summary of issue
-2. Likely root cause
-3. Fix or suggestions
+1. What the error means and Summary of issue
+2. What might have caused it and Likely root cause
+3. What parameters may be missing/wrong and How to Fix it. Give Good and Impactful Suggestions.
+
+
+
+
+
+
   `;
 
   try {
