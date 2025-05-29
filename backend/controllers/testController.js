@@ -1,5 +1,5 @@
 const axios = require("axios");
-
+const securityAnalyzer = require("../middlewares/securityAnalyzer.js");
 const runTests = async (req, res) => {
   const endpoints = req.body.endpoints;
 
@@ -60,6 +60,7 @@ const runTests = async (req, res) => {
       result.status = response.status;
       result.time = `${duration} ms`;
       result.error = response.status >= 400 ? response.data : null;
+      result.securityWarnings = securityAnalyzer(response, url);
 
       totalTime += duration;
 

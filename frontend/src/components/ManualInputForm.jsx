@@ -6,7 +6,7 @@ function ManualInputForm({ setResults, setSummary }) {
   const [urlError, setUrlError] = useState(false);
   const [method, setMethod] = useState("GET");
   const [body, setBody] = useState("");
-  const [headers, setHeaders] = useState("");
+  const [headers, setHeaders] = useState('{"Content-Type":"application/json"}');
   const [loading, setLoading] = useState(false);
   const token = useJwt();
 
@@ -94,15 +94,18 @@ function ManualInputForm({ setResults, setSummary }) {
         </button>
       </div>
       {(method === "POST" || method === "PUT" || method === "PATCH") && (
-        <textarea
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-          placeholder="Request Body (JSON)"
-          rows={4}
-          className="w-full p-2 border rounded font-mono text-sm"
-        ></textarea>
+        <>
+          <label className="font-semibold text-lg mb-2">Body</label>
+          <textarea
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            placeholder="Request Body (JSON)"
+            rows={4}
+            className="w-full p-2 border rounded font-mono text-sm"
+          ></textarea>
+        </>
       )}
-
+      <label className="font-semibold text-lg mb-2">Headers</label>
       <textarea
         value={headers}
         onChange={(e) => setHeaders(e.target.value)}
