@@ -1,4 +1,4 @@
-const parsePostman = (collection) => {
+export default function parsePostman(collection) {
   const items = collection.item;
   const endpoints = [];
 
@@ -23,6 +23,4 @@ const parsePostman = (collection) => {
 
   extractEndpoints(items);
   return endpoints;
-};
-
-module.exports = parsePostman;
+}

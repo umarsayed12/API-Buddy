@@ -1,12 +1,12 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-require("dotenv").config();
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import dotenv from "dotenv";
+dotenv.config();
 const apiKey = process.env.GEMINI_API_KEY;
 
 const genAI = new GoogleGenerativeAI(apiKey);
 
-const explainFailure = async (req, res) => {
+export const explainFailure = async (req, res) => {
   const { name, method, url, status, error } = req.body;
-
   const prompt = `
 Your name is API Buddy. You are an API debugging assistant. Analyze this failed API request and give the reason in simplest language with detail and possible fix.
 
@@ -49,5 +49,3 @@ Reply in 3 short paragraphs:
     res.status(500).json({ error: "Gemini generateContent failed" });
   }
 };
-
-module.exports = { explainFailure };

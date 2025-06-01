@@ -1,6 +1,6 @@
-const axios = require("axios");
-const securityAnalyzer = require("../middlewares/securityAnalyzer.js");
-const runTests = async (req, res) => {
+import axios from "axios";
+import securityAnalyzer from "../middlewares/securityAnalyzer.js";
+export const runTests = async (req, res) => {
   const endpoints = req.body.endpoints;
 
   const results = [];
@@ -90,5 +90,3 @@ const runTests = async (req, res) => {
 
   res.json({ summary, results });
 };
-
-module.exports = { runTests };

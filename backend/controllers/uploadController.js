@@ -1,8 +1,8 @@
-const fs = require("fs");
-const path = require("path");
-const parsePostman = require("../services/parsePostman");
+import fs from "fs";
+import path from "path";
+import parsePostman from "../services/parsePostman.js";
 
-const handleUpload = async (req, res) => {
+export const handleUpload = async (req, res) => {
   try {
     const filePath = path.join(__dirname, "..", req.file.path);
     const fileData = fs.readFileSync(filePath, "utf-8");
@@ -17,5 +17,3 @@ const handleUpload = async (req, res) => {
     res.status(500).json({ error: "Failed to process file." });
   }
 };
-
-module.exports = { handleUpload };

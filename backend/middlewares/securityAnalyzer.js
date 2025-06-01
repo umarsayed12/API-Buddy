@@ -1,4 +1,4 @@
-function analyzeSecurity(response, requestUrl) {
+export default function analyzeSecurity(response, requestUrl) {
   const warnings = [];
 
   if (requestUrl.startsWith("http://")) {
@@ -29,5 +29,3 @@ function analyzeSecurity(response, requestUrl) {
 
   return warnings;
 }
-
-module.exports = analyzeSecurity;

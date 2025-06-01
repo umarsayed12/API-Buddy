@@ -1,10 +1,11 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-require("dotenv").config();
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import dotenv from "dotenv";
+dotenv.config();
 const apiKey = process.env.GEMINI_API_KEY;
 
 const genAI = new GoogleGenerativeAI(apiKey);
 
-const explainSecurityWarning = async (req, res) => {
+export const explainSecurityWarning = async (req, res) => {
   const { warning, url } = req.body;
 
   const prompt = `
@@ -46,5 +47,3 @@ Reply in 3 short paragraphs:
     res.status(500).json({ error: "Gemini generateContent failed" });
   }
 };
-
-module.exports = { explainSecurityWarning };
