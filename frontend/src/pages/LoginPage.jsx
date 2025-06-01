@@ -8,6 +8,8 @@ import { LabelInputContainer } from "../components/ui/LabelInputContainer";
 import { useLoginUserMutation } from "../slices/api/authApi";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { userLoggedIn } from "../slices/authSlice";
 export default function LoginPage() {
   const [
     loginUser,
@@ -24,11 +26,12 @@ export default function LoginPage() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-
+  const dispatch = useDispatch();
   const onSubmit = async (data) => {
-    console.log("Signup Data:", data);
     const userData = await loginUser(data);
-    if (userData) console.log(userData?.data?.user);
+    if (userData) {
+      navigate("/");
+    }
   };
   useEffect(() => {
     if (loginIsSuccess) {
@@ -39,7 +42,7 @@ export default function LoginPage() {
       );
     }
   }, [loginIsSuccess, loginError]);
-
+  if (loginIsLoading) return <>Please Wait...</>;
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
       <Card className="w-full bg-white max-w-md shadow-xl rounded-2xl">

@@ -16,6 +16,10 @@ const route = createBrowserRouter([
     element: <App />,
     children: [
       {
+        path: "/",
+        element: <ApiPage />,
+      },
+      {
         path: "/login",
         element: <LoginPage />,
       },
@@ -30,6 +34,7 @@ const route = createBrowserRouter([
     ],
   },
 ]);
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <JwtProvider>

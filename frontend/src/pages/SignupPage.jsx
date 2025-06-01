@@ -5,9 +5,13 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { BottomGradient } from "../components/ui/bottomGradient";
 import { LabelInputContainer } from "../components/ui/LabelInputContainer";
-import { useRegisterUserMutation } from "../slices/api/authApi";
+import {
+  useLoginUserMutation,
+  useRegisterUserMutation,
+} from "../slices/api/authApi";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { userLoggedIn } from "../slices/authSlice";
 export default function SignupPage() {
   const [
     registerUser,
@@ -18,6 +22,15 @@ export default function SignupPage() {
       isSuccess: registerIsSuccess,
     },
   ] = useRegisterUserMutation();
+  const [
+    loginUser,
+    {
+      data: loginData,
+      error: loginError,
+      isLoading: loginIsLoading,
+      isSuccess: loginIsSuccess,
+    },
+  ] = useLoginUserMutation();
   const navigate = useNavigate();
   const {
     register,
@@ -26,18 +39,36 @@ export default function SignupPage() {
   } = useForm();
 
   const onSubmit = async (data) => {
-    await registerUser(data);
+    const user = await registerUser(data);
+    if (user) {
+      const userData = await loginUser(data);
+      if (userData) {
+        navigate("/");
+      }
+    }
   };
   useEffect(() => {
     if (registerIsSuccess) {
       toast.success(registerData?.message || "Account created Successfully.");
     } else if (registerError) {
       toast.error(
-        registerError?.data?.message || "Some error occured. Please Try Again"
+        registerError?.data?.message ||
+          "Some error occured. Please SignUp Again."
       );
     }
+    if (loginIsSuccess) {
+      toast.success("Welcome to Api Buddy.");
+    } else if (loginError) {
+      toast.error(
+        loginError?.data?.message || "Error while LogIn. Please Try Again"
+      );
+      navigate("/login");
+    }
   }, [registerIsSuccess, registerError]);
-
+  if (registerIsLoading || loginIsLoading)
+    return (
+      <div className="flex justify-center items-center">Please Wait...</div>
+    );
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
       <Card className="w-full bg-white max-w-md shadow-xl rounded-2xl">

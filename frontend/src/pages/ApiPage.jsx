@@ -6,12 +6,14 @@ import ManualInputForm from "../components/ManualInputForm";
 import axios from "axios";
 import JwtTokenInput from "../components/JWTTokenInput";
 import { useJwt } from "../context/JWTContext";
+import { useSelector } from "react-redux";
 function ApiPage() {
   const [activeTab, setActiveTab] = useState("collection");
   const [endpoints, setEndpoints] = useState([]);
   const [results, setResults] = useState([]);
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(false);
+
   const token = useJwt();
   const runTests = async () => {
     setLoading(true);
@@ -36,10 +38,7 @@ function ApiPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br text-white from-[#1E2F97] via-[#1AA7EC] to-[#1E2F97] p-6">
-      <h1 className="text-5xl text-white font-serif font-bold mb-6 text-center">
-        API Buddy
-      </h1>
+    <div className="h-screen pt-[10%] bg-gradient-to-br text-white from-[#1E2F97] via-[#1AA7EC] to-[#1E2F97] p-6">
       <div className="w-full flex justify-center items-center">
         <JwtTokenInput />
       </div>
