@@ -110,13 +110,18 @@ While traditional tools like Postman provide a solid manual API testing experien
 
 ### ✅ Save & View Test History
 
-This feature enables users to save the results of API tests (manual or from collections) and view detailed test history later.
+- Enables users to save results of API tests (manual or from collections) for later viewing.
+- Stores:
 
-- Save test type, test name, request/response details, status, duration, and timestamp
-- Request data includes: method, URL, headers, body
-- Response data includes: status, data, time taken, warnings, and concise error summaries
-- View detailed test result by ID with raw JSON viewer
-- Built with MongoDB, Express, RTK Query, and Tailwind UI
+  - Test type
+  - Test name
+  - Request details: method, URL, headers, body
+  - Response details: status code, data, duration, warnings, and concise error summaries
+  - Timestamp and overall status
+
+- View full test result by ID with a raw JSON viewer for advanced inspection.
+- Helps maintain a historical record for debugging or auditing.
+- Built using MongoDB, Express, RTK Query, and Tailwind UI.
 
 ---
 
