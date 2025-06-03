@@ -108,6 +108,17 @@ While traditional tools like Postman provide a solid manual API testing experien
 - Flags security warnings directly in the test results view
 - Helps developers identify and address vulnerabilities early
 
+### ✅ Save & View Test History
+
+This feature enables users to save the results of API tests (manual or from collections) and view detailed test history later.
+
+- Features:
+  - Save test type, test name, request/response details, status, duration, and timestamp
+  - Request data includes: method, URL, headers, body
+  - Response data includes: status, data, time taken, warnings, and concise error summaries
+  - View detailed test result by ID with raw JSON viewer
+  - Built with MongoDB, Express, RTK Query, and Tailwind UI
+
 ---
 
 ## 🏗️ Tech Stack
