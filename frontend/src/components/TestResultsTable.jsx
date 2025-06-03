@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
+import {
+  useGetTestHistoryQuery,
+  useSaveTestHistoryMutation,
+} from "../slices/api/historyApi";
 
 function TestResultsTable({ results, summary }) {
   const [loadingIndex, setLoadingIndex] = useState(null);
@@ -9,6 +13,8 @@ function TestResultsTable({ results, summary }) {
   const [warningModalData, setWarningModalData] = useState(null);
   const [warningExplainIndex, setWarningExplainIndex] = useState(null);
   const [warningAIResponses, setWarningAIResponses] = useState({});
+  const [saveTestHistory] = useSaveTestHistoryMutation();
+  // const [getTestHistory, { data: testHistoryData }] = useGetTestHistoryQuery();
   const handleWarningClick = (warnings, index, url) => {
     setWarningModalData({ warnings, index, url });
     setWarningAIResponses({});
@@ -125,6 +131,28 @@ function TestResultsTable({ results, summary }) {
     }
   }
 
+  const handleSaveHistory = async (res) => {
+    await saveTestHistory({
+      testType: "Collection",
+      testName: res.name,
+      request: {
+        name: res?.name,
+        method: res?.method,
+        url: res?.url,
+        body: res?.body,
+        headers: res?.headers,
+      },
+      response: {
+        status: res.status,
+        data: res.data,
+        duration: res.time,
+        isSuccess: res.status >= 200 && res.status < 300,
+        warning: res.data,
+        errorSummary: res.error,
+      },
+    });
+  };
+
   return (
     <div className="overflow-x-auto bg-gray-900 shadow-2xl shadow-black rounded-xl p-4 space-y-6">
       {summary && (
@@ -159,6 +187,7 @@ function TestResultsTable({ results, summary }) {
             <th className="p-2">Response</th>
             <th className="p-2">AI Explain</th>
             <th className="p-2">Warnings</th>
+            <th className="p-2">Save</th>
           </tr>
         </thead>
         <tbody>
@@ -244,6 +273,14 @@ function TestResultsTable({ results, summary }) {
                 ) : (
                   "-"
                 )}
+              </td>
+              <td className="p-2">
+                <button
+                  className="text-yellow-500 font-semibold cursor-pointer hover:bg-gray-600 flex justify-center items-center p-1 rounded-sm"
+                  onClick={(e) => handleSaveHistory(res)}
+                >
+                  💾
+                </button>
               </td>
             </tr>
           ))}

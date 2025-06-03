@@ -38,7 +38,7 @@ function ApiPage() {
   };
 
   return (
-    <div className="h-screen pt-[10%] bg-gradient-to-br text-white from-[#1E2F97] via-[#1AA7EC] to-[#1E2F97] p-6">
+    <div className="h-full pt-[10%] bg-gradient-to-br text-white from-[#1E2F97] via-[#1AA7EC] to-[#1E2F97] p-6">
       <div className="w-full flex justify-center items-center">
         <JwtTokenInput />
       </div>

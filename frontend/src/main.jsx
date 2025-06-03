@@ -10,6 +10,8 @@ import ApiPage from "./pages/ApiPage.jsx";
 import { Provider } from "react-redux";
 import { appStore } from "./app/store.js";
 import { Toaster } from "./components/ui/sonner.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
+import TestHistory from "./components/TestHistory.jsx";
 const route = createBrowserRouter([
   {
     path: "/",
@@ -20,16 +22,24 @@ const route = createBrowserRouter([
         element: <ApiPage />,
       },
       {
-        path: "/login",
-        element: <LoginPage />,
-      },
-      {
         path: "/signup",
         element: <SignupPage />,
       },
       {
+        path: "/login",
+        element: <LoginPage />,
+      },
+      {
+        path: "/profile",
+        element: <ProfilePage />,
+      },
+      {
         path: "/api-test-page",
         element: <ApiPage />,
+      },
+      {
+        path: "/test-history",
+        element: <TestHistory />,
       },
     ],
   },

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Card, CardContent } from "../components/ui/card";
 import { Input } from "../components/ui/input";
@@ -12,7 +12,9 @@ import {
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { userLoggedIn } from "../slices/authSlice";
+import { Loader2 } from "lucide-react";
 export default function SignupPage() {
+  const [loadingBtn, setLoadingBtn] = useState(false);
   const [
     registerUser,
     {
@@ -39,13 +41,12 @@ export default function SignupPage() {
   } = useForm();
 
   const onSubmit = async (data) => {
+    setLoadingBtn(true);
     const user = await registerUser(data);
     if (user) {
-      const userData = await loginUser(data);
-      if (userData) {
-        navigate("/");
-      }
+      await loginUser(data);
     }
+    setLoadingBtn(false);
   };
   useEffect(() => {
     if (registerIsSuccess) {
@@ -58,6 +59,7 @@ export default function SignupPage() {
     }
     if (loginIsSuccess) {
       toast.success("Welcome to Api Buddy.");
+      navigate("/");
     } else if (loginError) {
       toast.error(
         loginError?.data?.message || "Error while LogIn. Please Try Again"
@@ -65,14 +67,10 @@ export default function SignupPage() {
       navigate("/login");
     }
   }, [registerIsSuccess, registerError]);
-  if (registerIsLoading || loginIsLoading)
-    return (
-      <div className="flex justify-center items-center">Please Wait...</div>
-    );
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
       <Card className="w-full bg-white max-w-md shadow-xl rounded-2xl">
-        <CardContent className="p-6 space-y-4">
+        <CardContent className="p-6 space-y-1">
           <h2 className="text-2xl font-semibold text-center">Sign Up</h2>
           <p className="text-lg text-center">
             Hey there. Register your account
@@ -122,10 +120,19 @@ export default function SignupPage() {
               )}
             </div>
             <button
-              className="group/btn shadow-input relative cursor-pointer flex h-10 w-full items-center justify-center space-x-2 rounded-md bg-gray-50 px-4 font-medium text-white dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_#262626]"
+              disabled={loadingBtn}
+              className={`group/btn shadow-input relative cursor-pointer flex h-10 w-full items-center justify-center space-x-2 rounded-md ${
+                loadingBtn ? "bg-zinc-600" : "bg-zinc-900"
+              } px-4 font-medium text-white my-6 dark:shadow-[0px_0px_1px_1px_#262626]`}
               type="submit"
             >
-              Create Account &rarr;
+              {loadingBtn ? (
+                <>
+                  <Loader2 className="animate-spin" /> Please Wait
+                </>
+              ) : (
+                "Create Account"
+              )}
               <BottomGradient />
             </button>
           </form>
