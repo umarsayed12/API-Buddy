@@ -11,7 +11,8 @@ import { Provider } from "react-redux";
 import { appStore } from "./app/store.js";
 import { Toaster } from "./components/ui/sonner.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
-import TestHistory from "./components/TestHistory.jsx";
+import TestHistory from "./components/testHistory/TestHistory.jsx";
+import TestHistoryDetail from "./components/testHistory/TestHistoryDetail.jsx";
 const route = createBrowserRouter([
   {
     path: "/",
@@ -40,6 +41,10 @@ const route = createBrowserRouter([
       {
         path: "/test-history",
         element: <TestHistory />,
+      },
+      {
+        path: "/history/:id",
+        element: <TestHistoryDetail />,
       },
     ],
   },

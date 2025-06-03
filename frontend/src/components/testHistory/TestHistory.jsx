@@ -1,28 +1,45 @@
-import React, { useState } from "react";
-import { useGetTestHistoryQuery } from "../slices/api/historyApi";
-import LoadingScreen from "./ui/LoadingScreen";
-// import { Card, CardContent } from "./ui/card";
-import { HoverEffect } from "./ui/card-hover-effect";
-import { cn } from "../../lib/utils";
+import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
+import {
+  useDeleteTestHistoryMutation,
+  useGetTestHistoryQuery,
+} from "../../slices/api/historyApi";
+import LoadingScreen from "../ui/LoadingScreen";
+import { cn } from "../../../lib/utils";
 import { AnimatePresence, motion } from "motion/react";
+import { extractDateTime } from "../../lib/utils";
+import { Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const TestHistory = () => {
+  const navigate = useNavigate();
   let [hoveredIndex, setHoveredIndex] = useState(null);
-  const { data, isSuccess, isLoading } = useGetTestHistoryQuery();
-  function extractDateTime(isoString) {
-    const date = new Date(isoString);
-    const formattedDate = date.toISOString().split("T")[0];
-    const formattedTime = date.toLocaleTimeString("en-US", {
-      hour12: true,
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
+  const {
+    data,
+    isLoading,
+    refetch,
+    isSuccess: historyIsSuccess,
+  } = useGetTestHistoryQuery();
+  const [deleteTestHistory, { isSuccess, isError }] =
+    useDeleteTestHistoryMutation();
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const handleDeleteHistory = async (item) => {
+    setDeleteLoading(true);
+    await deleteTestHistory({ id: item._id });
+    setDeleteLoading(false);
+    refetch();
+  };
 
-    return { date: formattedDate, time: formattedTime };
-  }
-  console.log(data);
-
+  useEffect(() => {
+    if (historyIsSuccess) {
+      refetch();
+    }
+    if (isSuccess) {
+      toast.success("History Deleted Successfully.");
+    } else if (isError) {
+      toast.error("Error Deleting History. Please try again");
+    }
+  }, [isSuccess, isError, historyIsSuccess]);
   if (isLoading) return <LoadingScreen />;
 
   return (
@@ -30,9 +47,8 @@ const TestHistory = () => {
       <h1 className="text-xl mb-2 font-bold pl-2">Test History</h1>
       <div className={cn("grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4")}>
         {data.map((item, idx) => (
-          <a
-            href={item?.link}
-            key={item?.link}
+          <div
+            key={item?._id}
             className="relative group  block p-2 h-full w-full"
             onMouseEnter={() => setHoveredIndex(idx)}
             onMouseLeave={() => setHoveredIndex(null)}
@@ -71,10 +87,22 @@ const TestHistory = () => {
                 {item.request.url}
               </CardDescription>
               <div className="bg-gray-200/70 flex cursor-default justify-center rounded-2xl items-center gap-4 p-2">
-                <button className="text-red-600 font-medium p-2 hover:bg-gray-50/30 rounded-xl cursor-pointer shadow-4xl shadow-gray-900 outline-red-600">
-                  Delete
+                <button
+                  onClick={() => handleDeleteHistory(item)}
+                  className="text-red-600 font-medium p-2 hover:bg-gray-50/30 rounded-xl cursor-pointer shadow-4xl shadow-gray-900 outline-red-600"
+                >
+                  {deleteLoading ? (
+                    <>
+                      <Loader2 className="animate-spin" />
+                    </>
+                  ) : (
+                    "Delete"
+                  )}
                 </button>
-                <button className="bg-gray-900 hover:bg-gray-800 text-white p-2 px-3 rounded-xl cursor-pointer shadow-4xl shadow-gray-900">
+                <button
+                  onClick={() => navigate(`/history/${item._id}`)}
+                  className="bg-gray-900 hover:bg-gray-800 text-white p-2 px-3 rounded-xl cursor-pointer shadow-4xl shadow-gray-900"
+                >
                   Details
                 </button>
               </div>
@@ -83,7 +111,7 @@ const TestHistory = () => {
                 {extractDateTime(item.createdAt).time}
               </CardDescription>
             </Card>
-          </a>
+          </div>
         ))}
       </div>
     </div>

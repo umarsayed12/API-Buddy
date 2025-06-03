@@ -24,11 +24,11 @@ const historySchema = new mongoose.Schema(
       },
     },
     response: {
-      status: Number,
+      status: String,
       data: mongoose.Schema.Types.Mixed,
       duration: String,
       isSuccess: Boolean,
-      warning: mongoose.Schema.Types.Mixed,
+      warnings: mongoose.Schema.Types.Mixed,
       errorSummary: {
         type: String,
         default: null,

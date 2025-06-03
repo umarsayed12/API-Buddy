@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { FileUpload as Upload } from "../../components/ui/file-uploads";
+import { FileUpload as Upload } from "../../../components/ui/file-uploads";
 function FileUpload({ setEndpoints }) {
   const [loading, setLoading] = useState(false);
 

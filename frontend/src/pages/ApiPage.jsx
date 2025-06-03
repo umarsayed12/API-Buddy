@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import FileUpload from "../components/FileUpload";
-import EndpointTable from "../components/EndpointTable";
-import TestResultsTable from "../components/TestResultsTable";
-import ManualInputForm from "../components/ManualInputForm";
+import FileUpload from "../components/inputs/FileUpload";
+import EndpointTable from "../components/testResults/EndpointTable";
+import TestResultsTable from "../components/testResults/TestResultsTable";
+import ManualInputForm from "../components/inputs/ManualInputForm";
 import axios from "axios";
-import JwtTokenInput from "../components/JWTTokenInput";
+import JwtTokenInput from "../components/inputs/JWTTokenInput";
 import { useJwt } from "../context/JWTContext";
 import { useSelector } from "react-redux";
 function ApiPage() {
@@ -103,7 +103,11 @@ function ApiPage() {
       {results.length > 0 && (
         <div className="mt-8">
           <h2 className="text-xl font-semibold mb-2">Test Results</h2>
-          <TestResultsTable results={results} summary={summary} />
+          <TestResultsTable
+            activeTab={activeTab}
+            results={results}
+            summary={summary}
+          />
         </div>
       )}
     </div>

@@ -42,8 +42,25 @@ export const historyApi = createApi({
         method: "GET",
       }),
     }),
+    getHistoryById: builder.query({
+      query: (id) => ({
+        url: `/history/${id}`,
+        method: "GET",
+      }),
+    }),
+    deleteTestHistory: builder.mutation({
+      query: (data) => ({
+        url: "/history/delete-history",
+        method: "DELETE",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useSaveTestHistoryMutation, useGetTestHistoryQuery } =
-  historyApi;
+export const {
+  useSaveTestHistoryMutation,
+  useGetTestHistoryQuery,
+  useDeleteTestHistoryMutation,
+  useGetHistoryByIdQuery,
+} = historyApi;

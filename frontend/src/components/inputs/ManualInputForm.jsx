@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useJwt } from "../context/JWTContext";
+import { useJwt } from "../../context/JWTContext";
 function ManualInputForm({ setResults, setSummary }) {
   const [url, setUrl] = useState("");
   const [urlError, setUrlError] = useState(false);

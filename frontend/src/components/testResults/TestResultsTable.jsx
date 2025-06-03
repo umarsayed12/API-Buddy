@@ -1,19 +1,23 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Loader2 } from "lucide-react";
-import {
-  useGetTestHistoryQuery,
-  useSaveTestHistoryMutation,
-} from "../slices/api/historyApi";
+import { CloudSnowIcon, Loader2 } from "lucide-react";
+import { useSaveTestHistoryMutation } from "../../slices/api/historyApi";
+import { extractErrorSummary, truncateIfTooLarge } from "../../lib/utils";
+import { IconMessageDots } from "@tabler/icons-react";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
-function TestResultsTable({ results, summary }) {
+function TestResultsTable({ activeTab, results, summary }) {
   const [loadingIndex, setLoadingIndex] = useState(null);
   const [aiResponse, setAiResponse] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [warningModalData, setWarningModalData] = useState(null);
   const [warningExplainIndex, setWarningExplainIndex] = useState(null);
   const [warningAIResponses, setWarningAIResponses] = useState({});
-  const [saveTestHistory] = useSaveTestHistoryMutation();
+  const [
+    saveTestHistory,
+    { isSuccess: saveHistoryIsSuccess, isError: saveHistoryIsError },
+  ] = useSaveTestHistoryMutation();
   // const [getTestHistory, { data: testHistoryData }] = useGetTestHistoryQuery();
   const handleWarningClick = (warnings, index, url) => {
     setWarningModalData({ warnings, index, url });
@@ -132,27 +136,43 @@ function TestResultsTable({ results, summary }) {
   }
 
   const handleSaveHistory = async (res) => {
-    await saveTestHistory({
-      testType: "Collection",
-      testName: res.name,
-      request: {
-        name: res?.name,
-        method: res?.method,
-        url: res?.url,
-        body: res?.body,
-        headers: res?.headers,
-      },
-      response: {
-        status: res.status,
-        data: res.data,
-        duration: res.time,
-        isSuccess: res.status >= 200 && res.status < 300,
-        warning: res.data,
-        errorSummary: res.error,
-      },
-    });
+    try {
+      await saveTestHistory({
+        testType: activeTab.charAt(0).toUpperCase() + activeTab.slice(1),
+        testName: truncateIfTooLarge(res.name),
+        request: {
+          name: truncateIfTooLarge(res?.name),
+          method: res?.method,
+          url: res?.url,
+          body: truncateIfTooLarge(res?.body),
+          headers: truncateIfTooLarge(res?.headers),
+        },
+        response: {
+          status:
+            typeof res.status === "string"
+              ? res.status
+              : JSON.stringify(res.status),
+          data: truncateIfTooLarge(res.data),
+          duration: res.time,
+          isSuccess: res.status >= 200 && res.status < 300,
+          warnings: res.securityWarnings ? res.securityWarnings : "",
+          errorSummary:
+            typeof extractErrorSummary(res.error) !== "string"
+              ? JSON.stringify(extractErrorSummary(res.error))
+              : extractErrorSummary(res.error),
+        },
+      });
+    } catch (err) {
+      console.error("Failed to save test history:", err.message);
+    }
   };
-
+  useEffect(() => {
+    if (saveHistoryIsSuccess) {
+      toast.success("Test Saved Successfully");
+    } else if (saveHistoryIsError) {
+      toast.error("Failed to save Test. Please try again");
+    }
+  }, [saveHistoryIsSuccess, saveHistoryIsError]);
   return (
     <div className="overflow-x-auto bg-gray-900 shadow-2xl shadow-black rounded-xl p-4 space-y-6">
       {summary && (
@@ -279,7 +299,7 @@ function TestResultsTable({ results, summary }) {
                   className="text-yellow-500 font-semibold cursor-pointer hover:bg-gray-600 flex justify-center items-center p-1 rounded-sm"
                   onClick={(e) => handleSaveHistory(res)}
                 >
-                  💾
+                  {"💾"}
                 </button>
               </td>
             </tr>
@@ -289,19 +309,28 @@ function TestResultsTable({ results, summary }) {
 
       {showModal && aiResponse && (
         <div className="fixed overflow-y-auto inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
-          <div className="bg-white rounded-xl shadow-lg p-6 max-w-2xl">
-            <h3 className="text-lg font-semibold mb-4">
+          <div className="bg-white max-h-[90%] overflow-scroll rounded-xl shadow-lg p-6 max-w-2xl">
+            <h3 className="text-lg text-black font-semibold mb-4">
               API Buddy Explanation
             </h3>
             <pre className="whitespace-pre-wrap text-sm text-gray-800 mb-4">
               {parseBold(aiResponse)}
             </pre>
-            <button
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 cursor-pointer"
-              onClick={() => setShowModal(false)}
-            >
-              Close
-            </button>
+            <div className="flex gap-2 justify-center">
+              <button
+                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 cursor-pointer"
+                onClick={() => setShowModal(false)}
+              >
+                Close
+              </button>
+              <button
+                className="bg-blue-600 flex justify-center items-center gap-1 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
+                onClick={() => setShowModal(false)}
+              >
+                <IconMessageDots />
+                Chat with AI
+              </button>
+            </div>
           </div>
         </div>
       )}

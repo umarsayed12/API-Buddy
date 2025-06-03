@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useJwt } from "../context/JWTContext";
+import { useJwt } from "../../context/JWTContext";
 import { jwtDecode } from "jwt-decode";
 import { EyeOff, Eye } from "lucide-react";
 export default function JwtTokenInput() {

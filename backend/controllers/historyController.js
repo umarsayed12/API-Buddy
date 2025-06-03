@@ -1,30 +1,8 @@
 import History from "../models/historyModel.js";
 
-const extractErrorSummary = (errorData) => {
-  if (!errorData) return "Unknown error";
-
-  if (typeof errorData === "string") {
-    return errorData.length > 150 ? errorData.slice(0, 150) + "..." : errorData;
-  }
-
-  if (typeof errorData === "object") {
-    return (
-      errorData.message ||
-      errorData.error ||
-      errorData.title ||
-      JSON.stringify(errorData).slice(0, 150) + "..."
-    );
-  }
-
-  return "Unrecognized error format";
-};
-
 export const saveHistory = async (req, res) => {
   try {
     const { testType, testName, request, response } = req.body;
-    // console.log("Request : ", request);
-    // console.log("Headers : ", request.headers);
-    // console.log("Response : ", response);
 
     const newHistory = new History({
       user: req.id,
@@ -37,7 +15,7 @@ export const saveHistory = async (req, res) => {
       response: {
         ...response,
         warning: response.warning || null,
-        errorSummary: extractErrorSummary(response.error),
+        errorSummary: response.errorSummary,
       },
     });
 
@@ -59,5 +37,37 @@ export const getHistory = async (req, res) => {
   } catch (error) {
     console.error("Get History Error:", error);
     res.status(500).json({ message: "Error fetching history", error });
+  }
+};
+
+export const getHistoryById = async (req, res) => {
+  try {
+    const history = await History.findOne({
+      _id: req.params.id,
+      user: req.id,
+    });
+
+    if (!history) {
+      return res.status(404).json({ message: "History not found" });
+    }
+
+    res.status(200).json(history);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching history", error });
+  }
+};
+
+export const deleteHistory = async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    const history = await History.findByIdAndDelete(id);
+    if (!history) {
+      return res.status(404).json({ message: "History Not Found" });
+    }
+    res.status(200).json({ message: "History Deleted Successfully" });
+  } catch (error) {
+    console.error("Delete History Error:", error);
+    res.status(500).json({ message: "Error Deleting history", error });
   }
 };
