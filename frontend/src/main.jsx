@@ -13,6 +13,9 @@ import { Toaster } from "./components/ui/sonner.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import TestHistory from "./components/testHistory/TestHistory.jsx";
 import TestHistoryDetail from "./components/testHistory/TestHistoryDetail.jsx";
+import Dashboard from "./components/dashboard/Dashboard.jsx";
+import TestResultsTable from "./components/testResults/TestResultsTable.jsx";
+import AuthLayout from "./components/AuthLayout.jsx";
 const route = createBrowserRouter([
   {
     path: "/",
@@ -32,19 +35,35 @@ const route = createBrowserRouter([
       },
       {
         path: "/profile",
-        element: <ProfilePage />,
-      },
-      {
-        path: "/api-test-page",
-        element: <ApiPage />,
+        element: (
+          <AuthLayout authentication={true}>
+            <ProfilePage />
+          </AuthLayout>
+        ),
       },
       {
         path: "/test-history",
-        element: <TestHistory />,
+        element: (
+          <AuthLayout authentication={true}>
+            <TestHistory />,
+          </AuthLayout>
+        ),
       },
       {
         path: "/history/:id",
-        element: <TestHistoryDetail />,
+        element: (
+          <AuthLayout authentication={true}>
+            <TestHistoryDetail />,
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/dashboard",
+        element: (
+          <AuthLayout authentication={true}>
+            <Dashboard />
+          </AuthLayout>
+        ),
       },
     ],
   },

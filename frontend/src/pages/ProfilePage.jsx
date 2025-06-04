@@ -6,9 +6,12 @@ const ProfilePage = () => {
   console.log(user);
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <h1 className="text-center text-2xl">
-        Welcome Back <span className="text-violet-500">{user.name}</span>
+    <div className="flex justify-center items-center min-h-screen bg-[var(--bg-color)]">
+      <h1 className="text-center text-2xl text-[var(--text-color)]">
+        Welcome Back{" "}
+        <span className="text-[var(--accent-color)] font-semibold">
+          {user.name}
+        </span>
       </h1>
     </div>
   );

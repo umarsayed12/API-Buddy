@@ -7,7 +7,6 @@ import {
 import LoadingScreen from "../ui/LoadingScreen";
 import { cn } from "../../../lib/utils";
 import { AnimatePresence, motion } from "motion/react";
-import { extractDateTime } from "../../lib/utils";
 import { Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -107,8 +106,7 @@ const TestHistory = () => {
                 </button>
               </div>
               <CardDescription className={`text-white font-medium`}>
-                {extractDateTime(item.createdAt).date}{" "}
-                {extractDateTime(item.createdAt).time}
+                {new Date(item.createdAt).toLocaleString()}
               </CardDescription>
             </Card>
           </div>

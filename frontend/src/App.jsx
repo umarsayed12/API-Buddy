@@ -12,10 +12,10 @@ function App() {
       </>
     );
   return (
-    <>
+    <div className="min-h-screen bg-[var(--bg-color)] text-[var(--text-color)] transition-colors duration-300">
       <Navbar />
       <Outlet />
-    </>
+    </div>
   );
 }
 

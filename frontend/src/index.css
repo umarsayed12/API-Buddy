@@ -1,5 +1,32 @@
 @import "tailwindcss";
 
+/* Base Tailwind styling for body */
 body {
-  @apply font-sans bg-gray-100 text-gray-800;
+  @apply font-sans bg-[var(--bg-color)] text-[var(--text-color)];
+}
+
+/* Light Theme (default) */
+:root {
+  --text-color: #0c2d48; /* High contrast dark text */
+  --bg-color: #b5e48c; /* Light tea green background */
+  --accent-color: #1e8c8e; /* Darkened verdigris */
+  --btn-bg: #2ca66a; /* Emerald */
+  --btn-hover: #59d88c; /* Muted light green */
+  --nav-bg: #ffffff;
+  --nav-hover: #1e8c8e;
+  --input-bg: #ffffff;
+  --eye-bg: #000000;
+}
+
+/* Dark Theme overrides */
+[data-theme="dark"] {
+  --text-color: #e0f7ef; /* Light text */
+  --bg-color: #001223; /* Slightly lighter navy */
+  --accent-color: #90f7c6; /* High-contrast accent */
+  --btn-bg: #03a052;
+  --btn-hover: #3fe28f;
+  --nav-bg: #113f67;
+  --nav-hover: #3fe28f;
+  --input-bg: #14213d;
+  --eye-bg: #ffffff;
 }

@@ -34,7 +34,7 @@ function FileUpload({ setEndpoints }) {
         onChange={handleUpload}
         className="text-sm"
       />
-      {loading && <span className="text-blue-500">Processing...</span>}
+      {loading && <span className="text-blue-500 text-sm">Processing...</span>}
     </div>
   );
 }

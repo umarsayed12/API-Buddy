@@ -96,7 +96,7 @@ function TestResultsTable({ activeTab, results, summary }) {
         return (
           <code
             key={`code-${i}`}
-            className="bg-gray-200 px-1 py-0.5 rounded text-sm"
+            className="bg-[var(--nav-bg)] px-1 py-0.5 rounded text-sm"
           >
             {segment.slice(1, -1)}
           </code>
@@ -134,6 +134,13 @@ function TestResultsTable({ activeTab, results, summary }) {
       return htmlString;
     }
   }
+  const statusColor = {
+    1: "text-white",
+    2: "text-green-400",
+    4: "text-red-500",
+    W: "text-red-500",
+    5: "text-orange-300",
+  };
 
   const handleSaveHistory = async (res) => {
     try {
@@ -174,10 +181,10 @@ function TestResultsTable({ activeTab, results, summary }) {
     }
   }, [saveHistoryIsSuccess, saveHistoryIsError]);
   return (
-    <div className="overflow-x-auto bg-gray-900 shadow-2xl shadow-black rounded-xl p-4 space-y-6">
+    <div className="overflow-x-auto w-full mb-4 bg-[var(--nav-bg)] text-[var(--text-color)] shadow-2xl shadow-black rounded-xl p-4 space-y-6">
       {summary && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm text-white">
-          <div className="bg-gray-700 rounded-lg p-3">
+          <div className="bg-gray-900 rounded-lg p-3">
             <div className="font-medium">Total</div>
             <div className="text-xl font-bold">{summary.total}</div>
           </div>
@@ -196,8 +203,8 @@ function TestResultsTable({ activeTab, results, summary }) {
         </div>
       )}
 
-      <table className="min-w-full text-sm text-left">
-        <thead className="bg-gray-800">
+      <table className="min-w-full border text-sm text-left">
+        <thead className="bg-[var(--bg-color)]">
           <tr>
             <th className="p-2">Name</th>
             <th className="p-2">Method</th>
@@ -216,13 +223,19 @@ function TestResultsTable({ activeTab, results, summary }) {
               <td className="p-2">{res.name}</td>
               <td className="p-2">{res.method}</td>
               <td className="p-2 text-sm">{res.url}</td>
-              <td className="p-2 font-semibold text-blue-600">{res.status}</td>
+              <td
+                className={`p-2 font-semibold ${
+                  statusColor[String(res.status)[0]]
+                }`}
+              >
+                {res.status}
+              </td>
               <td className="p-2">{res.time}</td>
               <td className="p-2 text-xs whitespace-pre-wrap">
                 {res.error ? (
                   <div className="text-red-600">
                     <div className="font-bold mb-1">Error : </div>
-                    <div className="max-h-[180px] overflow-y-scroll text-red-600 whitespace-pre-wrap text-sm bg-gray-50 p-2 rounded border">
+                    <div className="max-h-[180px] overflow-y-scroll text-red-600 whitespace-pre-wrap text-sm bg-[var(--input-bg)] p-2 rounded border">
                       {typeof extractErrorMessage(res.error) === "string"
                         ? extractErrorMessage(res.error)
                         : JSON.stringify(extractErrorMessage(res.error))}
@@ -232,7 +245,7 @@ function TestResultsTable({ activeTab, results, summary }) {
                   <div className="">
                     <div className="text-green-600 font-bold mb-1">Success</div>
                     <div className="font-bold mb-1">Data :</div>
-                    <div className="max-h-[180px] max-w-[550px] overflow-y-scroll text-black whitespace-pre-wrap text-sm bg-gray-50 p-2 rounded border">
+                    <div className="max-h-[180px] max-w-[550px] overflow-y-scroll text-[var(--text-color)] whitespace-pre-wrap text-sm bg-[var(--input-bg)] p-2 rounded border">
                       {(() => {
                         if (typeof res.data === "string") {
                           return res.data;
@@ -267,7 +280,7 @@ function TestResultsTable({ activeTab, results, summary }) {
               <td className="p-2">
                 {res.error ? (
                   <button
-                    className="text-sm cursor-pointer flex justify-center items-center bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700 transition"
+                    className="text-sm cursor-pointer flex justify-center items-center bg-[var(--btn-bg)] text-white px-3 py-1 rounded hover:bg-[var(--btn-hover)] transition"
                     onClick={() => handleExplain(res, i)}
                   >
                     {loadingIndex === i ? (
@@ -308,12 +321,12 @@ function TestResultsTable({ activeTab, results, summary }) {
       </table>
 
       {showModal && aiResponse && (
-        <div className="fixed overflow-y-auto inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
-          <div className="bg-white max-h-[90%] overflow-scroll rounded-xl shadow-lg p-6 max-w-2xl">
-            <h3 className="text-lg text-black font-semibold mb-4">
+        <div className="fixed overflow-y-auto inset-0 bg-[var(--bg-color)] bg-opacity-30 flex justify-center items-center z-50">
+          <div className="bg-[var(--nav-bg)] max-h-[90%] overflow-scroll rounded-xl shadow-lg p-6 max-w-2xl">
+            <h3 className="text-[var(--text-color)] font-semibold mb-4">
               API Buddy Explanation
             </h3>
-            <pre className="whitespace-pre-wrap text-sm text-gray-800 mb-4">
+            <pre className="whitespace-pre-wrap text-sm text-[var(--text-color)] mb-4">
               {parseBold(aiResponse)}
             </pre>
             <div className="flex gap-2 justify-center">
@@ -324,7 +337,7 @@ function TestResultsTable({ activeTab, results, summary }) {
                 Close
               </button>
               <button
-                className="bg-blue-600 flex justify-center items-center gap-1 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
+                className="flex justify-center items-center gap-1 text-white px-4 py-2 rounded bg-[var(--btn-bg)] hover:bg-[var(--btn-hover)] cursor-pointer"
                 onClick={() => setShowModal(false)}
               >
                 <IconMessageDots />
@@ -335,11 +348,11 @@ function TestResultsTable({ activeTab, results, summary }) {
         </div>
       )}
       {warningModalData && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 overflow-y-scroll flex justify-center items-center z-50">
-          <div className="bg-white absolute text-black rounded-xl shadow-lg p-6 max-w-5xl w-full">
-            <h3 className="text-lg font-semibold mb-4">Security Warnings</h3>
+        <div className="fixed inset-0 bg-[var(--bg-color)] bg-opacity-30 overflow-y-scroll flex justify-center items-center z-50">
+          <div className="bg-[var(--nav-bg)] absolute text-[var(--text-color)] rounded-xl shadow-lg p-6 max-w-5xl w-full">
+            <h3 className="text-lg font-semibold mb-4 ">Security Warnings</h3>
             <table className="w-full border text-sm mb-4">
-              <thead className="bg-gray-100">
+              <thead className="bg-[var(--bg-color)]">
                 <tr>
                   <th className="p-2 text-left">Warning</th>
                   <th className="p-2 text-left">AI Explain</th>
@@ -351,12 +364,12 @@ function TestResultsTable({ activeTab, results, summary }) {
                     <td className="p-2">{warning}</td>
                     <td className="p-2">
                       {warningAIResponses[idx]?.show ? (
-                        <div className="text-gray-800 max-h-[180px] whitespace-pre-wrap bg-gray-100 p-2 rounded overflow-y-scroll">
+                        <div className="text-[var(--text-color)] max-h-[250px] whitespace-pre-wrap bg-[var(--bg-color)] p-2 rounded overflow-y-scroll">
                           {parseBold(warningAIResponses[idx].message)}
                         </div>
                       ) : (
                         <button
-                          className="text-sm flex justify-center items-center bg-purple-600 cursor-pointer text-white w-28 py-2 rounded hover:bg-purple-700 transition"
+                          className="text-sm flex justify-center items-center bg-[var(--btn-bg)] cursor-pointer text-white w-28 py-2 rounded hover:bg-[var(--btn-hover)] transition"
                           onClick={() =>
                             handleWarningExplain(
                               warning,
@@ -378,12 +391,21 @@ function TestResultsTable({ activeTab, results, summary }) {
                 ))}
               </tbody>
             </table>
-            <button
-              className="bg-red-600 cursor-pointer text-white px-4 py-2 rounded hover:bg-red-700"
-              onClick={() => setWarningModalData(null)}
-            >
-              Close
-            </button>
+            <div className="flex gap-2 justify-center">
+              <button
+                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 cursor-pointer"
+                onClick={() => setWarningModalData(false)}
+              >
+                Close
+              </button>
+              <button
+                className="flex justify-center items-center gap-1 text-white px-4 py-2 rounded bg-[var(--btn-bg)] hover:bg-[var(--btn-hover)] cursor-pointer"
+                onClick={() => setShowModal(false)}
+              >
+                <IconMessageDots />
+                Chat with AI
+              </button>
+            </div>
           </div>
         </div>
       )}

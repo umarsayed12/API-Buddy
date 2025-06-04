@@ -52,16 +52,3 @@ export const extractErrorSummary = (errorData) => {
 
   return "Unrecognized error format";
 };
-
-export const extractDateTime = (isoString) => {
-  const date = new Date(isoString);
-  const formattedDate = date.toISOString().split("T")[0];
-  const formattedTime = date.toLocaleTimeString("en-US", {
-    hour12: true,
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
-
-  return { date: formattedDate, time: formattedTime };
-};

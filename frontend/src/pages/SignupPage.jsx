@@ -42,10 +42,7 @@ export default function SignupPage() {
 
   const onSubmit = async (data) => {
     setLoadingBtn(true);
-    const user = await registerUser(data);
-    if (user) {
-      await loginUser(data);
-    }
+    await registerUser(data);
     setLoadingBtn(false);
   };
   useEffect(() => {
@@ -57,28 +54,24 @@ export default function SignupPage() {
           "Some error occured. Please SignUp Again."
       );
     }
-    if (loginIsSuccess) {
-      toast.success("Welcome to Api Buddy.");
-      navigate("/");
-    } else if (loginError) {
-      toast.error(
-        loginError?.data?.message || "Error while LogIn. Please Try Again"
-      );
-      navigate("/login");
-    }
   }, [registerIsSuccess, registerError]);
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
-      <Card className="w-full bg-white max-w-md shadow-xl rounded-2xl">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--bg-color)] text-[var(--text-color)]">
+      <Card className="w-full max-w-md shadow-xl rounded-2xl bg-[var(--nav-bg)]">
         <CardContent className="p-6 space-y-1">
-          <h2 className="text-2xl font-semibold text-center">Sign Up</h2>
-          <p className="text-lg text-center">
+          <h2 className="text-3xl font-bold text-center text-[var(--text-color)]">
+            Sign Up
+          </h2>
+          <p className="text-md text-center text-[var(--text-color)]/80">
             Hey there. Register your account
           </p>
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <LabelInputContainer>
-                <Label>Full Name</Label>
+                <Label className="text-[var(--text-color)] text-sm font-medium">
+                  Full Name
+                </Label>
                 <Input
                   placeholder="Sayed Sahab"
                   type="text"
@@ -86,27 +79,39 @@ export default function SignupPage() {
                 />
               </LabelInputContainer>
               {errors.name && (
-                <span className="text-sm text-red-500">
+                <span className="text-xs text-red-400 pl-1">
                   Full Name is required
                 </span>
               )}
             </div>
             <div>
               <LabelInputContainer>
-                <Label>Email</Label>
+                <Label className="text-[var(--text-color)] text-sm font-medium">
+                  Email
+                </Label>
                 <Input
                   placeholder="xyz@gmail.com"
                   type="email"
-                  {...register("email", { required: true })}
+                  {...register("email", {
+                    required: true,
+                    pattern: {
+                      value: /^\S+@\S+$/i,
+                      message: "Enter a valid email address",
+                    },
+                  })}
                 />
               </LabelInputContainer>
               {errors.email && (
-                <span className="text-sm text-red-500">Email is required</span>
+                <span className="text-xs text-red-400 pl-1">
+                  Email is required
+                </span>
               )}
             </div>
             <div>
               <LabelInputContainer>
-                <Label>Password</Label>
+                <Label className="text-[var(--text-color)] text-sm font-medium">
+                  Password
+                </Label>
                 <Input
                   placeholder="pass@4325"
                   type="password"
@@ -114,16 +119,17 @@ export default function SignupPage() {
                 />
               </LabelInputContainer>
               {errors.password && (
-                <span className="text-sm text-red-500">
+                <span className="text-xs text-red-400 pl-1">
                   Password must be at least 6 characters
                 </span>
               )}
             </div>
             <button
-              disabled={loadingBtn}
-              className={`group/btn shadow-input relative cursor-pointer flex h-10 w-full items-center justify-center space-x-2 rounded-md ${
-                loadingBtn ? "bg-zinc-600" : "bg-zinc-900"
-              } px-4 font-medium text-white my-6 dark:shadow-[0px_0px_1px_1px_#262626]`}
+              className={`group/btn mt-6 relative flex h-11 w-full items-center justify-center space-x-2 rounded-lg px-4 font-medium text-white transition-colors duration-300 ${
+                loadingBtn
+                  ? "bg-[var(--btn-hover)] opacity-60 cursor-not-allowed"
+                  : "bg-[var(--btn-bg)] cursor-pointer hover:bg-[var(--btn-hover)]"
+              }`}
               type="submit"
             >
               {loadingBtn ? (
@@ -131,15 +137,15 @@ export default function SignupPage() {
                   <Loader2 className="animate-spin" /> Please Wait
                 </>
               ) : (
-                "Create Account"
+                `Create Account`
               )}
               <BottomGradient />
             </button>
           </form>
-          <p className="text-center">
+          <p className="text-sm text-center text-[var(--text-color)]/80">
             Already have an account?{" "}
             <span
-              className="underline cursor-pointer text-blue-500"
+              className="underline cursor-pointer text-[var(--btn-bg)] hover:text-[var(--btn-hover)] transition"
               onClick={() => navigate("/login")}
             >
               Login
