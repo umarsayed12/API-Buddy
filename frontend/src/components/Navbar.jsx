@@ -22,7 +22,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     await logoutUser();
-    setMenuOpen(false); // Close menu on logout
+    setMenuOpen(false);
   };
 
   const NavItems = [
@@ -68,7 +68,7 @@ const Navbar = () => {
                 <li key={item.title}>
                   <button
                     onClick={() => navigate(item.link)}
-                    className="flex cursor-pointer items-center gap-2 px-4 py-2 rounded-full transition-all duration-200 text-[var(--text-color)] hover:bg-[var(--nav-hover)] hover:text-[var(--bg-color)]"
+                    className="flex cursor-pointer items-center gap-2 px-4 py-2 rounded-full transition-all duration-200 text-[var(--text-color)] hover:bg-[var(--nav-hover)] hover:text-[var(--input-bg)]"
                   >
                     {item.icon}
                     <span className="hidden lg:inline">{item.title}</span>

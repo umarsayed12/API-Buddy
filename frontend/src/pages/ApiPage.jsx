@@ -6,7 +6,6 @@ import ManualInputForm from "../components/inputs/ManualInputForm";
 import axios from "axios";
 import JwtTokenInput from "../components/inputs/JWTTokenInput";
 import { useJwt } from "../context/JWTContext";
-import { useSelector } from "react-redux";
 function ApiPage() {
   const [activeTab, setActiveTab] = useState("collection");
   const [endpoints, setEndpoints] = useState([]);

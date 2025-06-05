@@ -6,13 +6,13 @@ import {
 } from "../../slices/api/historyApi";
 import LoadingScreen from "../ui/LoadingScreen";
 import { cn } from "../../../lib/utils";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const TestHistory = () => {
   const navigate = useNavigate();
-  let [hoveredIndex, setHoveredIndex] = useState(null);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
   const {
     data,
     isLoading,
@@ -21,12 +21,19 @@ const TestHistory = () => {
   } = useGetTestHistoryQuery();
   const [deleteTestHistory, { isSuccess, isError }] =
     useDeleteTestHistoryMutation();
-  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteLoadingId, setDeleteLoadingId] = useState(null);
   const handleDeleteHistory = async (item) => {
-    setDeleteLoading(true);
-    await deleteTestHistory({ id: item._id });
-    setDeleteLoading(false);
-    refetch();
+    const start = Date.now();
+    setDeleteLoadingId(item._id);
+    try {
+      await deleteTestHistory({ id: item._id });
+    } finally {
+      const now = Date.now();
+      if (now - start > 5000) {
+        setDeleteLoadingId(null);
+        refetch();
+      }
+    }
   };
 
   useEffect(() => {
@@ -43,75 +50,88 @@ const TestHistory = () => {
 
   return (
     <div className="h-full flex flex-col pt-26 p-8">
-      <h1 className="text-xl mb-2 font-bold pl-2">Test History</h1>
-      <div className={cn("grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4")}>
-        {data.map((item, idx) => (
-          <div
-            key={item?._id}
-            className="relative group  block p-2 h-full w-full"
-            onMouseEnter={() => setHoveredIndex(idx)}
-            onMouseLeave={() => setHoveredIndex(null)}
-          >
-            <AnimatePresence>
-              {hoveredIndex === idx && (
-                <motion.span
-                  className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-slate-800/[0.8] block  rounded-3xl"
-                  layoutId="hoverBackground"
-                  initial={{ opacity: 0 }}
-                  animate={{
-                    opacity: 1,
-                    transition: { duration: 0.15 },
-                  }}
-                  exit={{
-                    opacity: 0,
-                    transition: { duration: 0.15, delay: 0.2 },
-                  }}
-                />
-              )}
-            </AnimatePresence>
-            <Card
-              className={`cursor-pointer text-center text-lg ${
-                item.request.method === "POST"
-                  ? "bg-amber-600"
-                  : item.request.method === "GET"
-                  ? "bg-green-600"
-                  : "bg-gray-900"
-              }`}
-            >
-              <CardTitle className={``}>{item.request.name}</CardTitle>
-              <CardDescription className={`text-white font-medium text-lg`}>
-                {item.request.method}
-              </CardDescription>
-              <CardDescription className={`text-white truncate`}>
-                {item.request.url}
-              </CardDescription>
-              <div className="bg-gray-200/70 flex cursor-default justify-center rounded-2xl items-center gap-4 p-2">
-                <button
-                  onClick={() => handleDeleteHistory(item)}
-                  className="text-red-600 font-medium p-2 hover:bg-gray-50/30 rounded-xl cursor-pointer shadow-4xl shadow-gray-900 outline-red-600"
-                >
-                  {deleteLoading ? (
-                    <>
-                      <Loader2 className="animate-spin" />
-                    </>
-                  ) : (
-                    "Delete"
+      <h1 className="text-xl mb-2 text-[var(--text-color)] font-bold pl-2">
+        Test History
+      </h1>
+      {data.length ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {data &&
+            data?.map((item, idx) => (
+              <div
+                key={item?._id}
+                className="relative group block p-2 h-full w-full"
+                onMouseEnter={() => setHoveredIndex(idx)}
+                onMouseLeave={() => setHoveredIndex(null)}
+              >
+                <AnimatePresence>
+                  {hoveredIndex === idx && (
+                    <motion.span
+                      className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-slate-800/[0.8] block  rounded-3xl"
+                      layoutId="hoverBackground"
+                      initial={{ opacity: 0 }}
+                      animate={{
+                        opacity: 1,
+                        transition: { duration: 0.15 },
+                      }}
+                      exit={{
+                        opacity: 0,
+                        transition: { duration: 0.15, delay: 0.2 },
+                      }}
+                    />
                   )}
-                </button>
-                <button
-                  onClick={() => navigate(`/history/${item._id}`)}
-                  className="bg-gray-900 hover:bg-gray-800 text-white p-2 px-3 rounded-xl cursor-pointer shadow-4xl shadow-gray-900"
+                </AnimatePresence>
+                <Card
+                  className={`cursor-pointer text-center text-lg bg-[var(--nav-bg)]`}
                 >
-                  Details
-                </button>
+                  <CardTitle className={`text-[var(--text-color)]`}>
+                    {item?.request?.name}
+                  </CardTitle>
+                  <CardDescription
+                    className={`font-medium text-lg ${
+                      item?.request?.method === "POST"
+                        ? "text-amber-600"
+                        : item?.request?.method === "GET"
+                        ? "text-green-500"
+                        : "text-gray-900"
+                    }`}
+                  >
+                    {item?.request?.method}
+                  </CardDescription>
+                  <CardDescription className="text-[var(--text-color)] truncate">
+                    {item?.request?.url}
+                  </CardDescription>
+                  <div className="bg-[var(--bg-color)]/40 flex cursor-default justify-center rounded-2xl items-center gap-4 p-2">
+                    <button
+                      onClick={() => handleDeleteHistory(item)}
+                      className="text-red-600 font-medium p-2 hover:bg-[var(--bg-color)]/30 rounded-xl cursor-pointer shadow-4xl shadow-gray-900 outline-red-600"
+                    >
+                      {deleteLoadingId === item?._id ? (
+                        <>
+                          <Loader2 className="animate-spin" />
+                        </>
+                      ) : (
+                        "Delete"
+                      )}
+                    </button>
+                    <button
+                      onClick={() => navigate(`/history/${item?._id}`)}
+                      className="bg-[var(--btn-bg)] hover:bg-[var(--btn-hover)] text-white p-2 px-3 rounded-xl cursor-pointer shadow-4xl shadow-gray-900"
+                    >
+                      Details
+                    </button>
+                  </div>
+                  <CardDescription className="text-[var(--text-color)] font-medium">
+                    {new Date(item?.createdAt).toLocaleString()}
+                  </CardDescription>
+                </Card>
               </div>
-              <CardDescription className={`text-white font-medium`}>
-                {new Date(item.createdAt).toLocaleString()}
-              </CardDescription>
-            </Card>
-          </div>
-        ))}
-      </div>
+            ))}
+        </div>
+      ) : (
+        <p className="text-center font-semibold text-xl text-[var(--text-color)]">
+          No History Present.
+        </p>
+      )}
     </div>
   );
 };

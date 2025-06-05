@@ -42,8 +42,11 @@ export default function SignupPage() {
 
   const onSubmit = async (data) => {
     setLoadingBtn(true);
-    await registerUser(data);
-    setLoadingBtn(false);
+    const user = await registerUser(data);
+    if (user) {
+      await loginUser(data);
+      setLoadingBtn(false);
+    }
   };
   useEffect(() => {
     if (registerIsSuccess) {
@@ -54,7 +57,14 @@ export default function SignupPage() {
           "Some error occured. Please SignUp Again."
       );
     }
-  }, [registerIsSuccess, registerError]);
+    if (loginIsSuccess) {
+      toast.success("Welcome to API Buddy.");
+      navigate("/");
+    } else if (loginError) {
+      toast.error("Some error occured. Please Login Again.");
+      navigate("/login");
+    }
+  }, [loginIsSuccess, loginError]);
   return (
     <div className="min-h-screen flex items-center justify-center bg-[var(--bg-color)] text-[var(--text-color)]">
       <Card className="w-full max-w-md shadow-xl rounded-2xl bg-[var(--nav-bg)]">

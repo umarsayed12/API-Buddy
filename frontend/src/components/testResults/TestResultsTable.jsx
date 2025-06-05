@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import axios from "axios";
 import { CloudSnowIcon, Loader2 } from "lucide-react";
 import { useSaveTestHistoryMutation } from "../../slices/api/historyApi";
@@ -141,38 +141,78 @@ function TestResultsTable({ activeTab, results, summary }) {
     W: "text-red-500",
     5: "text-orange-300",
   };
-
-  const handleSaveHistory = async (res) => {
-    try {
-      await saveTestHistory({
-        testType: activeTab.charAt(0).toUpperCase() + activeTab.slice(1),
-        testName: truncateIfTooLarge(res.name),
-        request: {
-          name: truncateIfTooLarge(res?.name),
-          method: res?.method,
-          url: res?.url,
-          body: truncateIfTooLarge(res?.body),
-          headers: truncateIfTooLarge(res?.headers),
-        },
-        response: {
-          status:
-            typeof res.status === "string"
-              ? res.status
-              : JSON.stringify(res.status),
-          data: truncateIfTooLarge(res.data),
-          duration: res.time,
-          isSuccess: res.status >= 200 && res.status < 300,
-          warnings: res.securityWarnings ? res.securityWarnings : "",
-          errorSummary:
-            typeof extractErrorSummary(res.error) !== "string"
-              ? JSON.stringify(extractErrorSummary(res.error))
-              : extractErrorSummary(res.error),
-        },
-      });
-    } catch (err) {
-      console.error("Failed to save test history:", err.message);
-    }
+  const timeoutRef = useRef(null);
+  const pendingRequestsRef = useRef(new Map());
+  const lastSavedRef = useRef(new Map());
+  const generateRequestKey = (res) => {
+    return `${res.method}-${res.url}-${JSON.stringify(res.body) || ""}-${
+      JSON.stringify(res.headers) || ""
+    }`;
   };
+  const delay = 1000;
+
+  const handleSaveHistory = useCallback(
+    // History Save with Debouncing
+    async (res) => {
+      const requestKey = generateRequestKey(res);
+      const now = Date.now();
+      const lastSaved = lastSavedRef.current.get(requestKey);
+      if (lastSaved && now - lastSaved < 10000) {
+        toast.error("Test Already Saved. Please wait for 10s");
+        return;
+      }
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      pendingRequestsRef.current.set(requestKey, {
+        res,
+        activeTab,
+        timestamp: now,
+      });
+      timeoutRef.current = setTimeout(async () => {
+        const pending = pendingRequestsRef.current.get(requestKey);
+        if (!pending) return;
+
+        try {
+          await saveTestHistory({
+            testType: activeTab.charAt(0).toUpperCase() + activeTab.slice(1),
+            testName: truncateIfTooLarge(pending?.res?.name),
+            request: {
+              name: truncateIfTooLarge(pending?.res?.name),
+              method: pending.res?.method,
+              url: pending.res?.url,
+              body: truncateIfTooLarge(pending?.res?.body),
+              headers: truncateIfTooLarge(pending?.res?.headers),
+            },
+            response: {
+              status:
+                typeof pending.res.status === "string"
+                  ? pending.res.status
+                  : JSON.stringify(pending?.res?.status),
+              data: truncateIfTooLarge(pending?.res?.data),
+              duration: pending?.res?.time,
+              isSuccess:
+                pending?.res?.status >= 200 && pending?.res?.status < 300,
+              warnings: pending?.res?.securityWarnings
+                ? pending?.res?.securityWarnings
+                : "",
+              errorSummary:
+                typeof extractErrorSummary(pending?.res?.error) !== "string"
+                  ? JSON.stringify(extractErrorSummary(pending?.res?.error))
+                  : extractErrorSummary(pending?.res?.error),
+            },
+          });
+          lastSavedRef.current.set(requestKey, now);
+          pendingRequestsRef.current.delete(requestKey);
+        } catch (err) {
+          console.error("Failed to save test history:", err.message);
+          pendingRequestsRef.current.delete(requestKey);
+        }
+      }, delay);
+    },
+    [saveTestHistory, delay]
+  );
+
   useEffect(() => {
     if (saveHistoryIsSuccess) {
       toast.success("Test Saved Successfully");

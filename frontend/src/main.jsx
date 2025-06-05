@@ -45,7 +45,7 @@ const route = createBrowserRouter([
         path: "/test-history",
         element: (
           <AuthLayout authentication={true}>
-            <TestHistory />,
+            <TestHistory />
           </AuthLayout>
         ),
       },
@@ -53,7 +53,7 @@ const route = createBrowserRouter([
         path: "/history/:id",
         element: (
           <AuthLayout authentication={true}>
-            <TestHistoryDetail />,
+            <TestHistoryDetail />
           </AuthLayout>
         ),
       },

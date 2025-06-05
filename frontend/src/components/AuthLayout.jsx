@@ -5,7 +5,7 @@ import LoadingScreen from "./ui/LoadingScreen";
 function AuthLayout({ children, authentication = true }) {
   const navigate = useNavigate();
   const [loader, setLoader] = useState(true);
-  const authStatus = useSelector((state) => state.auth.status);
+  const authStatus = useSelector((state) => state.auth.isAuthenticated);
 
   useEffect(() => {
     if (authentication && authStatus !== authentication) {
