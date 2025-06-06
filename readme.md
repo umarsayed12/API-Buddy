@@ -123,7 +123,7 @@ While traditional tools like Postman provide a solid manual API testing experien
 - Helps maintain a historical record for debugging or auditing.
 - Built using MongoDB, Express, RTK Query, and Tailwind UI.
 
-### 📊 Dashboard
+### Dashboard
 
 The **Dashboard** gives a visual summary of all recent API tests which are saved in history.
 
@@ -145,24 +145,41 @@ The **Dashboard** gives a visual summary of all recent API tests which are saved
 
 ---
 
-## 🏗️ Tech Stack
+## Updated Tech Stack
 
-### 🌐 Frontend
+### Frontend
 
-- ReactJS + TailwindCSS
-- File upload, request form, tab-based UI
+* **React 19** — Core UI library for building modern interfaces
+* **Vite** — Fast build tool and development server
+* **TailwindCSS** — Utility-first styling framework
+* **Radix UI** — Accessible and customizable UI primitives (Dialog, Tabs, Select, Dropdown, etc.)
+* **React Router v7** — Client-side routing
+* **Redux Toolkit** — Simplified global state management
+* **RTK Query** — API caching and async request management
+* **Recharts** — Charting for dashboard insights
+* **React Hook Form** — Minimal re-rendering form validation
+* **Lucide Icons & Tabler Icons** — Clean, modern icon sets
+* **React Dropzone** — File upload support for Postman collection JSONs
+* **JWT Decode** — Parses and verifies JWT tokens on the client
+* **Sonner** — Lightweight toast notification system
+* **Tailwind Merge & Animate** — Utility conflict resolution and animations
 
-### 🧠 Backend
+### Backend
 
-- Node.js + Express
-- Axios (for executing tests)
-- Gemini API (AI explanations)
-
+* **Node.js + Express 5** — Lightweight server and API execution layer
+* **Axios** — Handles internal HTTP requests and API tests
+* **Google Gemini API** — AI error analysis and natural language explanations
+* **MongoDB + Mongoose** — Test history persistence and querying
+* **JWT + Bcrypt** — Authentication and secure password storage
+* **CORS + Cookie Parser** — Cross-origin handling and cookie support
+* **Multer** — Handles file uploads (Postman collections)
+* **Dotenv** — Environment variable management
+  
 ---
 
-## 🚧 Roadmap / Upcoming Features
+## Roadmap / Upcoming Features
 
-### 🔖 Prompt-based Agent Mode
+### Prompt-based Agent Mode
 
 - Users can type prompts like:
 
@@ -171,12 +188,7 @@ The **Dashboard** gives a visual summary of all recent API tests which are saved
 
 - AI interprets and executes tests
 
-### 📁 Save & Load Collections
-
-- Store test cases locally or in the cloud
-- Re-run or inspect old test runs
-
-### 🧪 Advanced Batch Modes
+### Advanced Batch Modes
 
 - Group endpoints by:
 
@@ -186,18 +198,16 @@ The **Dashboard** gives a visual summary of all recent API tests which are saved
 
 - Stage-wise execution
 
-### 🌍 Shareable Test Results
+### Shareable Test Results
 
 - Share test run results with a link
 - Enable collaborative debugging
 
-### 📱 Mobile-Responsive UI
+### Mobile-Responsive UI
 
 - Optimized design for smaller screens
 
 ---
-
-## 🧪 Manual Test Examples
 
 ### 1. GET
 
@@ -223,19 +233,29 @@ Body:
 
 ---
 
-## 🖼️ UI Overview
+## UI Overview
 
-- 🔵 Tabs: Manual / Collection
-- 📥 File Upload: Postman JSON collections
-- 🧪 Test Button: Run single/batch requests
-- 🔐 JWT: Auth token UI with auto-header injection
-- 📋 Table: Test results and summary
-- 🤖 Explain: AI explanation for failed tests
-- 🧠 Modal: Gemini output shown neatly
+- **Login and Signup pages** with JWT-based authentication  
+- **Dual-tab layout** for Manual and Collection modes  
+- **Manual request form** with method, URL, headers, and body  
+- **Postman collection upload** with automatic endpoint parsing  
+- **Batch testing support** for uploaded collection files  
+- **JWT token input** with auto-injection into Authorization header  
+- **Test button** for running individual or all requests  
+- **Test result table** showing method, status, and response time  
+- **Clickable rows** to view full API response details  
+- **AI explanation button** for failed test cases  
+- **Modal view** for Gemini AI-powered error analysis  
+- **Security analyzer** for header and protocol warnings  
+- **Save test results** with full request/response data  
+- **History viewer** to browse and inspect past test sessions  
+- **Dashboard** with total, pass/fail counts and status breakdown  
+- **Response time and error insights** visualized via charts  
+- **Chart components** showing method distribution and slow endpoints  
 
 ---
 
-## 👨‍💻 Setup Instructions
+## Setup Instructions
 
 ### Frontend:
 
