@@ -145,11 +145,7 @@ The **Dashboard** gives a visual summary of all recent API tests which are saved
 
 ---
 
-Here’s the **updated Tech Stack** and **UI Overview** sections based on the features you described and the actual `package.json` dependencies. I’ve removed any general or redundant tech references and focused only on what is directly supported and clearly part of the product.
-
----
-
-## ✅ Updated Tech Stack
+## Updated Tech Stack
 
 ### Frontend
 
