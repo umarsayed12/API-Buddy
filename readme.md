@@ -1,10 +1,10 @@
-# 🧠 API Buddy
+# API Buddy
 
 An intelligent, Postman-like platform that automates API testing using AI capabilities. This tool simplifies manual and batch endpoint testing with features like AI error explanation, collection file upload, JWT support, request preview, test summary, and a modern UI/UX tailored for productivity.
 
 ---
 
-## 🔥 Motivation
+## Motivation
 
 While traditional tools like Postman provide a solid manual API testing experience, there's a gap in:
 
@@ -17,9 +17,9 @@ While traditional tools like Postman provide a solid manual API testing experien
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-### ✅ Manual URL Input Form
+### Manual URL Input Form
 
 - Fully functional form for manual requests.
 - Set:
@@ -32,7 +32,7 @@ While traditional tools like Postman provide a solid manual API testing experien
 
 - Immediate test execution with visual response feedback.
 
-### 📂 Collection File Upload (Postman JSON)
+### Collection File Upload (Postman JSON)
 
 - Upload a `.json` file exported from Postman.
 - Automatically parses and extracts:
@@ -45,13 +45,13 @@ While traditional tools like Postman provide a solid manual API testing experien
 
 - Supports batch testing for all extracted endpoints.
 
-### 🔐 JWT Auth Token UI
+### JWT Auth Token UI
 
 - Input and store JWT tokens in a dedicated UI field.
 - Automatically reused in `Authorization` headers for all requests.
 - Option to clear/reset the token easily.
 
-### 🧪 Test Result View + Error Parsing
+### Test Result View + Error Parsing
 
 - Clean and formatted response display:
 
@@ -61,7 +61,7 @@ While traditional tools like Postman provide a solid manual API testing experien
 - Highlights key response properties and status codes.
 - Enhanced readability for developers during failure analysis.
 
-### 🗂️ Dual Tab UI
+### Dual Tab UI
 
 - Simple tab-based layout for:
 
@@ -70,7 +70,7 @@ While traditional tools like Postman provide a solid manual API testing experien
 
 - Only one mode active at a time for a clean, non-conflicting UX.
 
-### 📊 Response Table with Summary
+### Response Table with Summary
 
 - Displays results in a table view:
 
@@ -79,12 +79,12 @@ While traditional tools like Postman provide a solid manual API testing experien
 
 - Shows overall summary:
 
-  - ✅ Passed
-  - ❌ Failed
-  - 🔁 Total tests
-  - ⏱️ Avg. response time
+  - Passed
+  - Failed
+  - Total tests
+  - Avg. response time
 
-### 🤖 AI-Powered Explanation (Gemini)
+### AI-Powered Explanation (Gemini)
 
 - For failed endpoints:
 
@@ -92,14 +92,14 @@ While traditional tools like Postman provide a solid manual API testing experien
   - Gemini AI analyzes request, response, and error
   - Provides a human-friendly reason for the failure
 
-### 💡 Modal Output for AI
+### Modal Output for AI
 
 - AI explanation is displayed in a modal:
 
   - Clean formatting
   - Actionable insights where possible
 
-### 🛡️ Security Analyzer Module
+### Security Analyzer Module
 
 - Automatically detects common API security issues:
   - Missing headers like **CORS**, **Content-Security-Policy**, etc.
@@ -108,7 +108,7 @@ While traditional tools like Postman provide a solid manual API testing experien
 - Flags security warnings directly in the test results view
 - Helps developers identify and address vulnerabilities early
 
-### ✅ Save & View Test History
+### Save & View Test History
 
 - Enables users to save results of API tests (manual or from collections) for later viewing.
 - Stores:
@@ -122,6 +122,26 @@ While traditional tools like Postman provide a solid manual API testing experien
 - View full test result by ID with a raw JSON viewer for advanced inspection.
 - Helps maintain a historical record for debugging or auditing.
 - Built using MongoDB, Express, RTK Query, and Tailwind UI.
+
+### 📊 Dashboard
+
+The **Dashboard** gives a visual summary of all recent API tests which are saved in history.
+
+- **Summary Cards**
+
+  - Total Tests, Success, Failure, and HTTP Methods count.
+
+- **Tabs for Insights**
+
+  - **Recent**: Latest 10 tests with search.
+  - **By Method**: HTTP method distribution (GET, POST, etc.).
+  - **By Status**: Success vs Failure count.
+  - **Response Time**: Pie chart of duration ranges.
+  - **Status Codes**: Count of each HTTP status.
+  - **Warnings/Errors**: Error type breakdown.
+
+- **Performance Chart**
+  - Top 5 slowest requests to debug latency.
 
 ---
 
