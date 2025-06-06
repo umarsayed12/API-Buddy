@@ -57,9 +57,12 @@ function ManualInputForm({ setResults, setSummary }) {
 
     setLoading(true);
     try {
-      const res = await axios.post(`${process.env.VITE_BACKEND_URL}/api/test`, {
-        endpoints: [endpoint],
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/test`,
+        {
+          endpoints: [endpoint],
+        }
+      );
 
       setResults(res.data.results);
       setSummary(res.data.summary);

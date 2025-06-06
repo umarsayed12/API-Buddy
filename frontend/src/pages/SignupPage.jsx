@@ -11,7 +11,6 @@ import {
 } from "../slices/api/authApi";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { userLoggedIn } from "../slices/authSlice";
 import { Loader2 } from "lucide-react";
 export default function SignupPage() {
   const [loadingBtn, setLoadingBtn] = useState(false);

@@ -5,6 +5,9 @@ import { useLoadUserQuery } from "./slices/api/authApi";
 import LoadingScreen from "./components/ui/LoadingScreen";
 function App() {
   const { data, isLoading } = useLoadUserQuery();
+  const url = import.meta.env.VITE_BACKEND_URL;
+  console.log(url);
+
   if (isLoading)
     return (
       <>

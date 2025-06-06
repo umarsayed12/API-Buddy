@@ -19,7 +19,6 @@ function TestResultsTable({ activeTab, results, summary }) {
     saveTestHistory,
     { isSuccess: saveHistoryIsSuccess, isError: saveHistoryIsError },
   ] = useSaveTestHistoryMutation();
-  // const [getTestHistory, { data: testHistoryData }] = useGetTestHistoryQuery();
   const handleWarningClick = (warnings, index, url) => {
     setWarningModalData({ warnings, index, url });
     setWarningAIResponses({});
@@ -43,7 +42,9 @@ function TestResultsTable({ activeTab, results, summary }) {
       setWarningExplainIndex(index);
       try {
         const res = await axios.post(
-          `${process.env.VITE_BACKEND_URL}/api/ai/explain-security-warnings`,
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/api/ai/explain-security-warnings`,
           {
             warning,
             url,
@@ -77,7 +78,7 @@ function TestResultsTable({ activeTab, results, summary }) {
     setAiResponse(null);
     try {
       const res = await axios.post(
-        `${process.env.VITE_BACKEND_URL}/api/ai/explain`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/ai/explain`,
         result
       );
       setAiResponse(res.data.explanation);
