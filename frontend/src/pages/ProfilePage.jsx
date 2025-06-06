@@ -8,7 +8,7 @@ const ProfilePage = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-[var(--bg-color)]">
       <h1 className="text-center text-2xl text-[var(--text-color)]">
-        Welcome Back{" "}
+        Welcome{" "}
         <span className="text-[var(--accent-color)] font-semibold">
           {user.name}
         </span>

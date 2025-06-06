@@ -19,20 +19,16 @@ const TestHistory = () => {
     refetch,
     isSuccess: historyIsSuccess,
   } = useGetTestHistoryQuery();
-  const [deleteTestHistory, { isSuccess, isError }] =
+  const [deleteTestHistory, { isSuccess, isError, isLoading: deleteLoading }] =
     useDeleteTestHistoryMutation();
   const [deleteLoadingId, setDeleteLoadingId] = useState(null);
   const handleDeleteHistory = async (item) => {
-    const start = Date.now();
     setDeleteLoadingId(item._id);
     try {
       await deleteTestHistory({ id: item._id });
     } finally {
-      const now = Date.now();
-      if (now - start > 5000) {
-        setDeleteLoadingId(null);
-        refetch();
-      }
+      setDeleteLoadingId(null);
+      refetch();
     }
   };
 
@@ -42,8 +38,10 @@ const TestHistory = () => {
     }
     if (isSuccess) {
       toast.success("History Deleted Successfully.");
+      refetch();
     } else if (isError) {
       toast.error("Error Deleting History. Please try again");
+      refetch();
     }
   }, [isSuccess, isError, historyIsSuccess]);
   if (isLoading) return <LoadingScreen />;
@@ -128,8 +126,8 @@ const TestHistory = () => {
             ))}
         </div>
       ) : (
-        <p className="text-center font-semibold text-xl text-[var(--text-color)]">
-          No History Present.
+        <p className="text-center text-[var(--text-color)]">
+          No recent tests found.
         </p>
       )}
     </div>

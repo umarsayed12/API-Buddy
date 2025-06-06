@@ -14,6 +14,7 @@ function TestResultsTable({ activeTab, results, summary }) {
   const [warningModalData, setWarningModalData] = useState(null);
   const [warningExplainIndex, setWarningExplainIndex] = useState(null);
   const [warningAIResponses, setWarningAIResponses] = useState({});
+  const [saveTestLoad, setSaveTestLoad] = useState(null);
   const [
     saveTestHistory,
     { isSuccess: saveHistoryIsSuccess, isError: saveHistoryIsError },
@@ -153,12 +154,14 @@ function TestResultsTable({ activeTab, results, summary }) {
 
   const handleSaveHistory = useCallback(
     // History Save with Debouncing
-    async (res) => {
+    async (res, idx) => {
+      setSaveTestLoad(idx);
       const requestKey = generateRequestKey(res);
       const now = Date.now();
       const lastSaved = lastSavedRef.current.get(requestKey);
       if (lastSaved && now - lastSaved < 10000) {
         toast.error("Test Already Saved. Please wait for 10s");
+        setSaveTestLoad(null);
         return;
       }
       if (timeoutRef.current) {
@@ -207,6 +210,8 @@ function TestResultsTable({ activeTab, results, summary }) {
         } catch (err) {
           console.error("Failed to save test history:", err.message);
           pendingRequestsRef.current.delete(requestKey);
+        } finally {
+          setSaveTestLoad(null);
         }
       }, delay);
     },
@@ -350,9 +355,13 @@ function TestResultsTable({ activeTab, results, summary }) {
               <td className="p-2">
                 <button
                   className="text-yellow-500 font-semibold cursor-pointer hover:bg-gray-600 flex justify-center items-center p-1 rounded-sm"
-                  onClick={(e) => handleSaveHistory(res)}
+                  onClick={() => handleSaveHistory(res, i)}
                 >
-                  {"💾"}
+                  {saveTestLoad === i ? (
+                    <Loader2 className="animate-spin" />
+                  ) : (
+                    "💾"
+                  )}
                 </button>
               </td>
             </tr>
