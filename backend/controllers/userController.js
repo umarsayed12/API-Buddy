@@ -1,7 +1,10 @@
 import { User } from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
-
+import crypto from "crypto";
+import jwt from "jsonwebtoken";
+import ResetToken from "../models/resetToken.js";
+import { sendResetEmail } from "../utils/sendEmail.js";
 export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -105,4 +108,35 @@ export const getUserProfile = async (req, res) => {
       message: "Error : Failed to fetch User Profile",
     });
   }
+};
+
+export const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(404).json({ message: "User not found" });
+
+  const token = crypto.randomBytes(32).toString("hex");
+  await ResetToken.create({ userId: user._id, token });
+
+  await sendResetEmail(email, token);
+  res.json({ message: "Password reset email sent" });
+};
+
+export const resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  const resetToken = await ResetToken.findOne({ token });
+  if (!resetToken)
+    return res.status(400).json({ message: "Invalid or expired token" });
+
+  const user = await User.findById(resetToken.userId);
+  if (!user) return res.status(404).json({ message: "User not found" });
+  const hashedPass = await bcrypt.hash(password, 10);
+
+  user.password = hashedPass;
+  await user.save();
+  await ResetToken.deleteOne({ _id: resetToken._id });
+
+  res.json({ message: "Password reset successful" });
 };

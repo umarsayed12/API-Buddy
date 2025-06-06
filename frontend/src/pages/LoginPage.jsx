@@ -116,6 +116,14 @@ export default function LoginPage() {
               Sign Up
             </span>
           </p>
+          <p className="text-sm text-center text-[var(--text-color)]/80">
+            <span
+              className="underline cursor-pointer text-[var(--btn-bg)] hover:text-[var(--btn-hover)] transition"
+              onClick={() => navigate("/forgot-password")}
+            >
+              Forgot Password
+            </span>
+          </p>
         </CardContent>
       </Card>
     </div>
