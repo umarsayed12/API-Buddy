@@ -51,7 +51,7 @@ const TestHistory = () => {
       <h1 className="text-xl mb-2 text-[var(--text-color)] font-bold pl-2">
         Test History
       </h1>
-      {data.length ? (
+      {data?.length ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {data &&
             data?.map((item, idx) => (
