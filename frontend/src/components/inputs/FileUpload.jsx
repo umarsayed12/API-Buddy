@@ -14,7 +14,7 @@ function FileUpload({ setEndpoints }) {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/upload",
+        `${process.env.VITE_BACKEND_URL}/api/upload`,
         formData
       );
       setEndpoints(res.data.endpoints);

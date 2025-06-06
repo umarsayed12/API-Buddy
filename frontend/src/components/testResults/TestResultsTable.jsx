@@ -43,7 +43,7 @@ function TestResultsTable({ activeTab, results, summary }) {
       setWarningExplainIndex(index);
       try {
         const res = await axios.post(
-          "http://localhost:5000/api/ai/explain-security-warnings",
+          `${process.env.VITE_BACKEND_URL}/api/ai/explain-security-warnings`,
           {
             warning,
             url,
@@ -77,7 +77,7 @@ function TestResultsTable({ activeTab, results, summary }) {
     setAiResponse(null);
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/ai/explain",
+        `${process.env.VITE_BACKEND_URL}/api/ai/explain`,
         result
       );
       setAiResponse(res.data.explanation);

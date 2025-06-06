@@ -16,7 +16,7 @@ export default function JwtTokenInput() {
   } catch {}
   const [showJwt, setShowJwt] = useState(false);
   return (
-    <div className="bg-[var(--nav-bg)] text-[var(--text-color)] w-full max-w-xl shadow-md p-5 rounded-xl space-y-3 border text-black">
+    <div className="bg-[var(--nav-bg)] text-[var(--text-color)] w-full max-w-xl shadow-md p-5 rounded-xl space-y-3 border">
       <label className="block text-sm font-medium text-[var(--text-color)]">
         JWT Auth Token
       </label>

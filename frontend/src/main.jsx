@@ -14,7 +14,6 @@ import ProfilePage from "./pages/ProfilePage.jsx";
 import TestHistory from "./components/testHistory/TestHistory.jsx";
 import TestHistoryDetail from "./components/testHistory/TestHistoryDetail.jsx";
 import Dashboard from "./components/dashboard/Dashboard.jsx";
-import TestResultsTable from "./components/testResults/TestResultsTable.jsx";
 import AuthLayout from "./components/AuthLayout.jsx";
 import ForgotPasswordPage from "./pages/managePassword/ForgotPasswordPage.jsx";
 import ResetPasswordPage from "./pages/managePassword/ResetPasswordPage.jsx";

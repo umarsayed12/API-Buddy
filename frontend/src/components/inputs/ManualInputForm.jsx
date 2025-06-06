@@ -57,7 +57,7 @@ function ManualInputForm({ setResults, setSummary }) {
 
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/test", {
+      const res = await axios.post(`${process.env.VITE_BACKEND_URL}/api/test`, {
         endpoints: [endpoint],
       });
 
