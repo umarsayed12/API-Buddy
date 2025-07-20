@@ -19,6 +19,9 @@ app.use(
     credentials: true,
   })
 );
+app.get("/ping", (req, res) => {
+  res.status(200).send("pong");
+});
 
 app.use("/api/upload", uploadRoute);
 app.use("/api/test", testRoute);
