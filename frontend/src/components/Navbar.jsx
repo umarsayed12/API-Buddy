@@ -56,7 +56,7 @@ const Navbar = () => {
           {localStorage.getItem("theme") == "dark" ? (
             "API Buddy"
           ) : (
-            <img src="/public/LogoLight.png" width="95%"></img>
+            <img src="/LogoLight.png" width="95%"></img>
           )}
         </div>
         <div className="w-[80%] sm:hidden flex justify-end items-center pr-2">
