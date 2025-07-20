@@ -53,11 +53,7 @@ const Navbar = () => {
     <nav className="fixed z-50 w-full bg-[var(--nav-bg)] text-[var(--text-color)] shadow-md px-4 sm:px-6 py-3">
       <div className="flex justify-between items-center max-w-7xl mx-auto">
         <div className="w-[50%] sm:w-[15%] font-bold text-xl sm:text-2xl">
-          {localStorage.getItem("theme") == "dark" ? (
-            "API Buddy"
-          ) : (
-            <img src="/LogoLight.png" width="95%"></img>
-          )}
+          API Buddy
         </div>
         <div className="w-[80%] sm:hidden flex justify-end items-center pr-2">
           <DarkModeToggle />
